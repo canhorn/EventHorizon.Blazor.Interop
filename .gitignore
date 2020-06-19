@@ -1,0 +1,7 @@
+dist
+node_modules
+bin
+obj
+appsettings.*.json
+.vs
+*.csproj.user

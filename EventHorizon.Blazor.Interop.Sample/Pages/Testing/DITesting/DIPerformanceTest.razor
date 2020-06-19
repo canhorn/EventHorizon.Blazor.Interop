@@ -1,0 +1,33 @@
+﻿@using System.Diagnostics
+@using EventHorizon.Blazor.Interop.Sample.Pages.MediatrTesting.Model
+@using Microsoft.Extensions.DependencyInjection
+@using EventHorizon.Blazor.Interop.Sample.Pages.DITesting.Model
+
+<div>
+    <h3>DI Testing (Runs @_max)</h3>
+    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <button @onclick="HandleRunPerformanceCall_StandardSendEvent">Run</button>
+</div>
+
+@code {
+    [Inject]
+    public IServiceScopeFactory ServiceScopeFactory { get; set; }
+
+    public TimeSpan TimeTaken { get; set; }
+
+    const int _max = 10_000;
+    public async Task HandleRunPerformanceCall_StandardSendEvent()
+    {
+        using var scope = ServiceScopeFactory.CreateScope();
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            await scope.ServiceProvider.GetRequiredService<IDIRunHandler>().Handle(
+                new DIRunEvent()
+            );
+        }
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+}

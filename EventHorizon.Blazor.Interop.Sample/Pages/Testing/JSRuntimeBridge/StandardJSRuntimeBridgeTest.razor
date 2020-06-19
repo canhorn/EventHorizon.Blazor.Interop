@@ -1,0 +1,36 @@
+﻿@using System.Diagnostics
+
+<div>
+    <h3>Standard JSRuntime Bridge Test (Runs @_max)</h3>
+    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <button @onclick="HandleRunPerformanceCall_StandardSendEvent">Run</button>
+</div>
+
+@code {
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
+
+    public TimeSpan TimeTaken { get; set; }
+
+    const int _max = 1_000;
+    public async Task HandleRunPerformanceCall_StandardSendEvent()
+    {
+        var s1 = Stopwatch.StartNew();
+        // Version 1: describe version 1 here.
+        for (int i = 0; i < _max; i++)
+        {
+            await StandardSendEvent();
+        }
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public async Task StandardSendEvent()
+    {
+        await JSRuntime.InvokeVoidAsync(
+            "bridge.send",
+            "string"
+        );
+    }
+}

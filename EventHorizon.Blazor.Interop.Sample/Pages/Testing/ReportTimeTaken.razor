@@ -1,0 +1,22 @@
+﻿<div>
+    @($"Took {TimeTaken.Ticks} Ticks (Average {TimeTaken.Ticks / Runs} Ticks)")
+</div>
+<div>
+    @($"Took {TimeTaken.TotalMilliseconds} ms (Average {TimeTaken.TotalMilliseconds / Runs} ms)")
+</div>
+<div>
+    @($"{Runs / (TimeTaken.TotalMilliseconds / 1000)} Actions per Second")
+</div>
+<div>
+    @($"{Runs / TimeTaken.TotalMilliseconds} Actions per Millisecond")
+</div>
+<div>
+    @($"{(Runs / (TimeTaken.TotalMilliseconds)) * 16} Actions per Frame") (60 fps) (16 ms/frame)
+</div>
+
+@code {
+    [Parameter]
+    public TimeSpan TimeTaken { get; set; }
+    [Parameter]
+    public long Runs { get; set; }
+}

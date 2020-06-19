@@ -1,0 +1,52 @@
+﻿@using System.Diagnostics
+
+<div>
+    <h3>Individual JsonSerializer.Serialize Test (Runs @_max)</h3>
+    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <button @onclick="HandleRunPerformanceCall_StandardSendEvent">Run</button>
+</div>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+
+    const int _max = 100;
+    public void HandleRunPerformanceCall_StandardSendEvent()
+    {
+        var s1 = Stopwatch.StartNew();
+        // Version 1: describe version 1 here.
+        for (int i = 0; i < _max; i++)
+        {
+            Task.Run(() => StandardTest(new TestObject
+            {
+                Type = "random-event",
+                Data = new
+                {
+                    Id = 100L,
+                    Name = "random-name",
+                    Position = new
+                    {
+                        X = 1f,
+                        Y = 2f,
+                        Z = 3f,
+                    }
+                }
+            }));
+        }
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public void StandardTest(TestObject obj)
+    {
+        System.Text.Json.JsonSerializer.Serialize(
+            obj
+        );
+    }
+
+    public struct TestObject
+    {
+        public string Type { get; set; }
+        public object Data { get; set; }
+    }
+}

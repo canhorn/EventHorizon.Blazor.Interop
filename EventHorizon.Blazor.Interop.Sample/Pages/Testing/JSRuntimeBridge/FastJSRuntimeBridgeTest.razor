@@ -1,0 +1,32 @@
+﻿@using System.Diagnostics
+
+<div>
+    <h3>Fast JSRuntime Bridge Test (Runs @_max)</h3>
+    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <button @onclick="HandleRunPerformanceCall_FastJSSendEvent">Run</button>
+</div>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+
+    const int _max = 1_000;
+    private void HandleRunPerformanceCall_FastJSSendEvent()
+    {
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            FastJSSendEvent();
+        }
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public void FastJSSendEvent()
+    {
+        BlazorJsFastDataExchanger.JsFastDataExchanger.SetStringData(
+            "bridge.send",
+            "event_to_run"
+        );
+    }
+}
