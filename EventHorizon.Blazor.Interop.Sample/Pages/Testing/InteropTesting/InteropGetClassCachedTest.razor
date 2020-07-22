@@ -1,0 +1,74 @@
+﻿@using System.Diagnostics
+@using EventHorizon.Blazor.Interop;
+
+<div>
+    <h3>Interop Get Class Cached Test</h3>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <button @onclick="HandleRunTest">Run</button>
+</div>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+
+    const int _max = 1_000;
+    private void HandleRunTest()
+    {
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            var value = RunTest();
+        }
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    private Vector3Class _vector3Class;
+
+    public Vector3Class RunTest()
+    {
+        if (_vector3Class == null)
+        {
+            _vector3Class = EventHorizonBlazorInteropt.GetClass<Vector3Class>(
+                "getObject",
+                "obj",
+                (entity) =>
+                {
+                    return new Vector3Class(entity);
+                }
+            );
+        }
+        return _vector3Class;
+    }
+
+    [System.Text.Json.Serialization.JsonConverter(typeof(CachedEntityConverter))]
+    public class Vector3Class
+    : CachedEntity
+    {
+        public string X
+        {
+            get
+            {
+                return EventHorizonBlazorInteropt.Get<string>(
+                    this.___guid,
+                    "X"
+                );
+            }
+            set
+            {
+                EventHorizonBlazorInteropt.Set(
+                    this.___guid,
+                    "X",
+                    value
+                );
+            }
+        }
+
+        public Vector3Class(
+            ICachedEntity entity
+        )
+        {
+            ___guid = entity.___guid;
+        }
+    }
+}

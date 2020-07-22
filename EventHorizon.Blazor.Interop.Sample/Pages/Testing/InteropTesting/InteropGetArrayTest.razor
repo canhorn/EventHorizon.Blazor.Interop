@@ -2,8 +2,8 @@
 @using EventHorizon.Blazor.Interop;
 
 <div>
-    <h3>Interop Func Test</h3>
-    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <h3>Interop Get Array Test</h3>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
     <button @onclick="HandleRunTest">Run</button>
 </div>
 
@@ -25,12 +25,9 @@
 
     public void RunTest()
     {
-        var locationHref = EventHorizonBlazorInteropt.Func<string>(
-            new object[]
-            {
-                new string[] { "document", "location", "toString" },
-            }
+        var results = EventHorizonBlazorInteropt.GetArray<string>(
+            "getArray",
+            "result"
         );
-        Console.WriteLine(locationHref);
     }
 }

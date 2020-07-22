@@ -2,7 +2,7 @@
 @using EventHorizon.Blazor.Interop;
 
 <div>
-    <h3>Interop Call Test (Runs @_max)</h3>
+    <h3>Interop Call Test</h3>
     <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
     <button @onclick="HandleRunTest">Run</button>
 </div>
@@ -30,7 +30,7 @@
         Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
     }
 
-    public void RunTest(CachedEntity cachedEntity)
+    public void RunTest(ICachedEntity cachedEntity)
     {
         EventHorizonBlazorInteropt.Call(
             cachedEntity,

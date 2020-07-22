@@ -96,3 +96,13 @@ app {
         grid-template-columns: auto auto auto;
     }
 }
+
+@media only screen and (min-width: 1200px) {
+    .testing-content {
+        grid-template-columns: auto auto auto auto auto;
+    }
+}
+
+.--bold {
+    font-weight: bold;
+}

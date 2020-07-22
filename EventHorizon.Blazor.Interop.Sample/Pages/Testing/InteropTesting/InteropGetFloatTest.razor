@@ -2,8 +2,8 @@
 @using EventHorizon.Blazor.Interop;
 
 <div>
-    <h3>Interop Func Test</h3>
-    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <h3>Interop Get Float Test</h3>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
     <button @onclick="HandleRunTest">Run</button>
 </div>
 
@@ -13,24 +13,27 @@
     const int _max = 1_000;
     private void HandleRunTest()
     {
+        var expected = 999.99f;
         var s1 = Stopwatch.StartNew();
         for (int i = 0; i < _max; i++)
         {
-            RunTest();
+
+            var actual = RunTest();
+            if (actual != expected)
+            {
+                throw new Exception("Invalid result");
+            }
         }
         s1.Stop();
         TimeTaken = s1.Elapsed;
         Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
     }
 
-    public void RunTest()
+    public float RunTest()
     {
-        var locationHref = EventHorizonBlazorInteropt.Func<string>(
-            new object[]
-            {
-                new string[] { "document", "location", "toString" },
-            }
+        return EventHorizonBlazorInteropt.Get<float>(
+            "getPrimitive",
+            "numberResult"
         );
-        Console.WriteLine(locationHref);
     }
 }

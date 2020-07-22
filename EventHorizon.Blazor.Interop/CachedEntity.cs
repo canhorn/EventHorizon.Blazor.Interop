@@ -1,6 +1,9 @@
-﻿namespace EventHorizon.Blazor.Interop
+﻿using System.Text.Json.Serialization;
+
+namespace EventHorizon.Blazor.Interop
 {
-    public class CachedEntity
+    [JsonConverter(typeof(CachedEntityConverter))]
+    public class CachedEntity : ICachedEntity
     {
         public string ___guid { get; set; }
     }

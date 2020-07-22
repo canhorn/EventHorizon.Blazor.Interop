@@ -1,17 +1,20 @@
 ﻿<div>
-    @($"Took {TimeTaken.Ticks} Ticks (Average {TimeTaken.Ticks / Runs} Ticks)")
+    Took <span class="--bold">@TimeTaken.Ticks</span> Ticks (Average <span class="--bold">@(TimeTaken.Ticks / Runs)</span> Ticks)
 </div>
 <div>
-    @($"Took {TimeTaken.TotalMilliseconds} ms (Average {TimeTaken.TotalMilliseconds / Runs} ms)")
+    Took <span class="--bold">@TimeTaken.TotalMilliseconds</span> ms (Average <span class="--bold">@(TimeTaken.TotalMilliseconds / Runs)</span> ms)
 </div>
 <div>
-    @($"{Runs / (TimeTaken.TotalMilliseconds / 1000)} Actions per Second")
+    <span class="--bold">@(Runs / TimeTaken.TotalMilliseconds)</span> Actions per Millisecond
 </div>
 <div>
-    @($"{Runs / TimeTaken.TotalMilliseconds} Actions per Millisecond")
+    <span class="--bold">@(Runs / (TimeTaken.TotalMilliseconds / 1000))</span> Actions per Second
 </div>
 <div>
-    @($"{(Runs / (TimeTaken.TotalMilliseconds)) * 16} Actions per Frame") (60 fps) (16 ms/frame)
+    <span class="--bold">@((Runs / (TimeTaken.TotalMilliseconds)) * 16)</span> Actions per Frame (60 fps) (16 ms/frame)
+</div>
+<div>
+    Runs: <span class="--bold">@(Runs)</span>
 </div>
 
 @code {

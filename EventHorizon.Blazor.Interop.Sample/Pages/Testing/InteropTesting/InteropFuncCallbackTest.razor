@@ -1,0 +1,66 @@
+﻿@using System.Diagnostics
+@using EventHorizon.Blazor.Interop
+@using EventHorizon.Blazor.BabylonJS.Pages.Testing.InteropTesting.Model
+
+<div>
+    <h3>Interop Func Callback Test</h3>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <button @onclick="HandleRunTest">Run</button>
+</div>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+
+    private ICachedEntity _funcCallbackClass;
+    private DotNetObjectReference<MessageUpdateInvokeHelper> _invokableReference;
+    private MessageUpdateInvokeHelper _messageUpdateInvokeHelper;
+
+    protected override async Task OnInitializedAsync()
+    {
+        _messageUpdateInvokeHelper = new MessageUpdateInvokeHelper();
+        _invokableReference = DotNetObjectReference.Create(
+            _messageUpdateInvokeHelper
+        );
+        _funcCallbackClass = EventHorizonBlazorInteropt.New(
+            new object[]
+            {
+                new string[] {
+                    "FuncCallbackClass"
+                }
+            }
+        );
+
+        await EventHorizonBlazorInteropt.FuncCallback(
+            _funcCallbackClass,
+            "register",
+            "CallAfterRenderAction",
+            _invokableReference
+        );
+    }
+
+    const int _max = 100;
+    private void HandleRunTest()
+    {
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            RunTest(
+                _funcCallbackClass
+            );
+        }
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public void RunTest(
+        ICachedEntity entity
+    )
+    {
+        EventHorizonBlazorInteropt.Call(
+            entity,
+            "trigger",
+            _max
+        );
+    }
+}
