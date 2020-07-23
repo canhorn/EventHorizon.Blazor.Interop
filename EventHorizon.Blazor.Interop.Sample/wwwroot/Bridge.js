@@ -51,15 +51,45 @@ window["getArray"] = {
     result: ["string1", "string2"],
 };
 
+// Class
 window["getObject"] = {
     obj: {
         X: "hello",
     }
 };
+
 window["getArrayClass"] = {
     obj: [{
         X: "hello",
     }, {
         X: "world",
     }]
+};
+
+window["funcClass"] = {
+    func: () => ({
+        X: "X",
+        Y: "Y",
+        Z: "Z",
+    }),
+};
+
+window["funcArray"] = {
+    func: () => [
+        "X1",
+        "Y1",
+        "Z1",
+    ],
+};
+
+window["funcArrayClass"] = {
+    func: () => [{
+        X: "X1",
+        Y: "Y1",
+        Z: "Z1",
+    }, {
+        X: "X2",
+        Y: "Y2",
+        Z: "Z2",
+    }],
 };

@@ -14,7 +14,7 @@
     private void HandleRunTest()
     {
         // Create CachedEntity
-        var cachedEntity = EventHorizonBlazorInteropt.New(
+        var cachedEntity = EventHorizonBlazorInterop.New(
             new string[] { "Vector3" },
             1,
             2,
@@ -32,7 +32,7 @@
 
     public void RunTest(ICachedEntity cachedEntity)
     {
-        EventHorizonBlazorInteropt.Call(
+        EventHorizonBlazorInterop.Call(
             cachedEntity,
             "addInPlaceFromFloats",
             1,

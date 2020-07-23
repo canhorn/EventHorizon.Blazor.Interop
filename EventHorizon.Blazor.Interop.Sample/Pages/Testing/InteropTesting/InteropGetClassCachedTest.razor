@@ -29,7 +29,7 @@
     {
         if (_vector3Class == null)
         {
-            _vector3Class = EventHorizonBlazorInteropt.GetClass<Vector3Class>(
+            _vector3Class = EventHorizonBlazorInterop.GetClass<Vector3Class>(
                 "getObject",
                 "obj",
                 (entity) =>
@@ -49,14 +49,14 @@
         {
             get
             {
-                return EventHorizonBlazorInteropt.Get<string>(
+                return EventHorizonBlazorInterop.Get<string>(
                     this.___guid,
                     "X"
                 );
             }
             set
             {
-                EventHorizonBlazorInteropt.Set(
+                EventHorizonBlazorInterop.Set(
                     this.___guid,
                     "X",
                     value

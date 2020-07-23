@@ -25,12 +25,11 @@
 
     public void RunTest()
     {
-        var locationHref = EventHorizonBlazorInteropt.Func<string>(
+        var locationHref = EventHorizonBlazorInterop.Func<string>(
             new object[]
             {
                 new string[] { "document", "location", "toString" },
             }
         );
-        Console.WriteLine(locationHref);
     }
 }

@@ -14,7 +14,7 @@ In "App.razor"
 
     protected override void OnInitialized()
     {
-        EventHorizonBlazorInteropt.JSRuntime = JSRuntime;
+        EventHorizonBlazorInterop.JSRuntime = JSRuntime;
     }
 }
 ~~~

@@ -21,7 +21,7 @@
         _invokableReference = DotNetObjectReference.Create(
             _messageUpdateInvokeHelper
         );
-        _funcCallbackClass = EventHorizonBlazorInteropt.New(
+        _funcCallbackClass = EventHorizonBlazorInterop.New(
             new object[]
             {
                 new string[] {
@@ -30,7 +30,7 @@
             }
         );
 
-        await EventHorizonBlazorInteropt.FuncCallback(
+        await EventHorizonBlazorInterop.FuncCallback(
             _funcCallbackClass,
             "register",
             "CallAfterRenderAction",
@@ -57,7 +57,7 @@
         ICachedEntity entity
     )
     {
-        EventHorizonBlazorInteropt.Call(
+        EventHorizonBlazorInterop.Call(
             entity,
             "trigger",
             _max

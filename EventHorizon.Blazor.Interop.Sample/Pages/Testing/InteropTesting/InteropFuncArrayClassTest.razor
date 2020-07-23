@@ -2,8 +2,8 @@
 @using EventHorizon.Blazor.Interop;
 
 <div>
-    <h3>Interop Get Array Test</h3>
-    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <h3>Interop Func Array Class Test</h3>
+    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
     <button @onclick="HandleRunTest">Run</button>
 </div>
 
@@ -25,9 +25,12 @@
 
     public void RunTest()
     {
-        var results = EventHorizonBlazorInterop.GetArray<string>(
-            "getArray",
-            "result"
+        var funcArrayClass = EventHorizonBlazorInterop.FuncArrayClass<Vector3CachedEntity>(
+            entity => new Vector3CachedEntity(entity),
+            new object[]
+            {
+                new string[] { "funcArray", "func" },
+            }
         );
     }
 }

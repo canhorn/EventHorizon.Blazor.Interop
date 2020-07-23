@@ -271,7 +271,7 @@
             throw { code: "invalid_call" };
         },
         /**
-         * This will call a through an identifier's a function from window as the root.
+         * This will call an identifier a function from window as the root.
          * arguments[0] = Identifier
          * arguments[1...n] = Function Arguments
          **/

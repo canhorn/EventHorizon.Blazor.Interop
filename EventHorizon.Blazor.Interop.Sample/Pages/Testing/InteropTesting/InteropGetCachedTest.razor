@@ -3,6 +3,7 @@
 
 <div>
     <h3>Interop Get Cached Test</h3>
+    @_locationHref
     <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
     <button @onclick="HandleRunTest">Run</button>
 </div>
@@ -28,7 +29,7 @@
     {
         if (_locationHref == null)
         {
-            _locationHref = EventHorizonBlazorInteropt.Get<string>(
+            _locationHref = EventHorizonBlazorInterop.Get<string>(
                 "document",
                 "location.href"
             );

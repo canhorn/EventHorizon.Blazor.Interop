@@ -25,44 +25,13 @@
 
     public void RunTest()
     {
-        var vector3Classes = EventHorizonBlazorInteropt.GetArrayClass<Vector3Class>(
+        var vector3Classes = EventHorizonBlazorInterop.GetArrayClass<Vector3CachedEntity>(
             "getArrayClass",
             "obj",
             (entity) =>
             {
-                return new Vector3Class(entity);
+                return new Vector3CachedEntity(entity);
             }
         );
-    }
-
-    [System.Text.Json.Serialization.JsonConverter(typeof(CachedEntityConverter))]
-    public class Vector3Class
-    : CachedEntity
-    {
-        public string X
-        {
-            get
-            {
-                return EventHorizonBlazorInteropt.Get<string>(
-                    this.___guid,
-                    "X"
-                );
-            }
-            set
-            {
-                EventHorizonBlazorInteropt.Set(
-                    this.___guid,
-                    "X",
-                    value
-                );
-            }
-        }
-
-        public Vector3Class(
-            ICachedEntity entity
-        )
-        {
-            ___guid = entity.___guid;
-        }
     }
 }
