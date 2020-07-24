@@ -2,6 +2,15 @@
 
 	<PropertyGroup>
 		<TargetFramework>net5.0</TargetFramework>
+
+        <AssemblyTitle>EventHorizon Blazor Interop</AssemblyTitle>
+        <Description>Utilities that make Blazor WASM C# interfacing with JavaScript easier, will triggers corresponding JavaScript functionality.</Description>
+        <AssemblyName>EventHorizon.Blazor.Interop</AssemblyName>
+        <Authors>Cody Merritt Anhorn</Authors>
+        <PackageId>EventHorizon.Blazor.Interop</PackageId>
+        <PackageTags>Blazor, WASM, Interop, JavaScript</PackageTags>
+        <PackageProjectUrl>https://github.com/canhorn/EventHorizon.Blazor.Interop</PackageProjectUrl>
+        <RepositoryUrl>https://github.com/canhorn/EventHorizon.Blazor.Interop</RepositoryUrl>
 	</PropertyGroup>
 
 	<ItemGroup>
