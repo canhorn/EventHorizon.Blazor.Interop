@@ -1,9 +1,8 @@
 [![Build Status](https://img.shields.io/endpoint.svg?url=https%3A%2F%2Factions-badge.atrox.dev%2Fcanhorn%2FEventHorizon.Blazor.Interop%2Fbadge%3Fref%3Dmain&style=for-the-badge)](https://actions-badge.atrox.dev/canhorn/EventHorizon.Blazor.Interop/goto?ref=main)
-![Nuget](https://img.shields.io/nuget/v/EventHorizon.Blazor.Interop?style=for-the-badge)
+[![Nuget](https://img.shields.io/nuget/vpre/EventHorizon.Blazor.Interop?style=for-the-badge)](https://www.nuget.org/packages/EventHorizon.Blazor.Interop)
 
-![GitHub](https://img.shields.io/github/license/canhorn/EventHorizon.Blazor.Interop?style=for-the-badge)
-![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/canhorn/EventHorizon.Blazor.Interop?include_prereleases&label=latest%20tag&style=for-the-badge)
-![GitHub tag (latest SemVer)](https://img.shields.io/github/v/tag/canhorn/EventHorizon.Blazor.Interop?style=for-the-badge)
+[![GitHub](https://img.shields.io/github/license/canhorn/EventHorizon.Blazor.Interop?style=for-the-badge)](https://github.com/canhorn/EventHorizon.Blazor.Interop/blob/main/LICENSE)
+[![GitHub tag (latest SemVer pre-release)](https://img.shields.io/github/v/tag/canhorn/EventHorizon.Blazor.Interop?include_prereleases&label=latest%20tag&style=for-the-badge)](https://github.com/canhorn/EventHorizon.Blazor.Interop/tags)
 
 # About
 
