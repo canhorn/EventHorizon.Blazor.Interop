@@ -10,7 +10,17 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{BDF1BB12-22E3-4E8F-85E9-6DA870B48917}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		GitVersion.yml = GitVersion.yml
 		README.md = README.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{8134B7F2-4B91-4C73-8F28-DAD30D647045}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{ED036A07-BFBB-44BB-AFAD-ABAD2CEC5C55}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\dotnet-build-publish.yml = .github\workflows\dotnet-build-publish.yml
+		.github\workflows\dotnet-package.yml = .github\workflows\dotnet-package.yml
+		.github\workflows\main-tag-bump.yml = .github\workflows\main-tag-bump.yml
 	EndProjectSection
 EndProject
 Global
@@ -30,6 +40,10 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8134B7F2-4B91-4C73-8F28-DAD30D647045} = {BDF1BB12-22E3-4E8F-85E9-6DA870B48917}
+		{ED036A07-BFBB-44BB-AFAD-ABAD2CEC5C55} = {8134B7F2-4B91-4C73-8F28-DAD30D647045}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {9497D11D-7D24-4DE2-A904-0ADE224939B6}
