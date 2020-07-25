@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-	<PropertyGroup>
-		<TargetFramework>net5.0</TargetFramework>
+    <PropertyGroup>
+        <TargetFramework>net5.0</TargetFramework>
 
         <AssemblyTitle>EventHorizon Blazor Interop</AssemblyTitle>
         <Description>Utilities that make Blazor WASM C# interfacing with JavaScript easier, will triggers corresponding JavaScript functionality.</Description>
@@ -11,11 +11,13 @@
         <PackageTags>Blazor, WASM, Interop, JavaScript</PackageTags>
         <PackageProjectUrl>https://github.com/canhorn/EventHorizon.Blazor.Interop</PackageProjectUrl>
         <RepositoryUrl>https://github.com/canhorn/EventHorizon.Blazor.Interop</RepositoryUrl>
-	</PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0-preview.7.20365.19" />
-		<PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="5.0.0-preview.7.20365.19" />
-	</ItemGroup>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0-preview.7.20365.19" />
+        <PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="5.0.0-preview.7.20365.19" />
+    </ItemGroup>
 
 </Project>
