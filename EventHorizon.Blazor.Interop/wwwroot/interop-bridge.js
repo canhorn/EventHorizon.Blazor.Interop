@@ -27,8 +27,73 @@
             }
         }
         return uuid.join("");
-    }
+    };
+    /**
+     * Check argument for existing in argumentCache and if actionCallbackType.
+     * Returns argValue if not part argumentCache or actionCallbackType.
+     * 
+     * @param {any} argValue
+     */
+    const convertArg = (argValue) => {
+        if (!argValue) {
+            return null;
+        }
+        if (argValue[cacheKey] && argumentCache.has(argValue[cacheKey])) {
+            return argumentCache.get(argValue[cacheKey]);
+        } else if (argValue[typeKey] && argValue[typeKey] === actionCallbackType) {
+            const invokableReference = argValue["invokableReference"];
+            const method = argValue["method"];
+            return async function () {
+                const args = [];
+                for (var arg of arguments) {
+                    if (typeof (arg) === "object"
+                        && !Array.isArray(arg)
+                    ) {
+                        const newCacheKey = guid();
+                        arg[cacheKey] = newCacheKey;
+                        argumentCache.set(newCacheKey, arg);
+                        args.push({ [cacheKey]: newCacheKey });
+                    } else if (Array.isArray(arg)) {
+                        // TODO: Support Array Response
+                        args.push([]);
+                    } else {
+                        args.push(arg);
+                    }
+                }
+                await invokableReference.invokeMethodAsync(method, ...args);
+            };
+        }
+        return argValue;
+    };
+    /**
+     * Loop through all the argumentArray items and convert the args to usable references.
+     * 
+     * @param {any} argumentArray
+     */
+    const convertArgs = (argumentArray) => {
+        const args = [];
+        for (var i = 1; i < argumentArray.length; i++) {
+            const arg = convertArg(argumentArray[i]);
+
+            if (typeof (arg) === "object" && !arg[cacheKey] && !Array.isArray(arg)) {
+                // Object literal: { prop: "hi", prop2: { ___type: "action_callback" } }
+                const newArg = {};
+                for (const key in arg) {
+                    if (Object.prototype.hasOwnProperty.call(arg, key)) {
+                        const element = arg[key];
+                        newArg[key] = convertArg(element);
+                    }
+                }
+                args.push(newArg);
+            } else {
+                args.push(arg);
+            }
+        }
+        return args;
+    };
     const cacheKey = "___guid";
+    const typeKey = "___type";
+    const actionCallbackType = "action_callback";
     window["blazorInterop"] = {
         /**
          * This will call a function on a cached object.
@@ -246,16 +311,8 @@
         new: function () {
             try {
                 var identifier = arguments[0];
-                var args = [];
                 var createNew = window[identifier[0]];
-                for (var i = 1; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg && arg[cacheKey] && argumentCache.has(arg[cacheKey])) {
-                        args.push(argumentCache.get(arg[cacheKey]));
-                    } else {
-                        args.push(arg);
-                    }
-                }
+                var args = convertArgs(arguments);
                 for (var i = 1; i < identifier.length; i++) {
                     createNew = createNew[identifier[i]];
                 }
@@ -278,19 +335,11 @@
         func: function () {
             try {
                 var identifier = arguments[0];
-                var args = [];
                 var createNew = window[identifier[0]];
                 if (argumentCache.has(identifier[0])) {
                     createNew = argumentCache.get(identifier[0]);
                 }
-                for (var i = 1; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg && arg[cacheKey] && argumentCache.has(arg[cacheKey])) {
-                        args.push(argumentCache.get(arg[cacheKey]));
-                    } else {
-                        args.push(arg);
-                    }
-                }
+                var args = convertArgs(arguments);
                 var context = window;
                 for (var i = 1; i < identifier.length; i++) {
                     context = createNew;
@@ -310,19 +359,11 @@
         funcClass: function () {
             try {
                 var identifier = arguments[0];
-                var args = [];
                 var createNew = window[identifier[0]];
                 if (argumentCache.has(identifier[0])) {
                     createNew = argumentCache.get(identifier[0]);
                 }
-                for (var i = 1; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg && arg[cacheKey] && argumentCache.has(arg[cacheKey])) {
-                        args.push(argumentCache.get(arg[cacheKey]));
-                    } else {
-                        args.push(arg);
-                    }
-                }
+                var args = convertArgs(arguments);
                 var context = window;
                 for (var i = 1; i < identifier.length; i++) {
                     context = createNew;
@@ -350,19 +391,11 @@
         funcArray: function () {
             try {
                 var identifier = arguments[0];
-                var args = [];
                 var createNew = window[identifier[0]];
                 if (argumentCache.has(identifier[0])) {
                     createNew = argumentCache.get(identifier[0]);
                 }
-                for (var i = 1; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg && arg[cacheKey] && argumentCache.has(arg[cacheKey])) {
-                        args.push(argumentCache.get(arg[cacheKey]));
-                    } else {
-                        args.push(arg);
-                    }
-                }
+                var args = convertArgs(arguments);
                 var context = window;
                 for (var i = 1; i < identifier.length; i++) {
                     context = createNew;
@@ -385,19 +418,11 @@
         funcArrayClass: function () {
             try {
                 var identifier = arguments[0];
-                var args = [];
                 var createNew = window[identifier[0]];
                 if (argumentCache.has(identifier[0])) {
                     createNew = argumentCache.get(identifier[0]);
                 }
-                for (var i = 1; i < arguments.length; i++) {
-                    var arg = arguments[i];
-                    if (arg && arg[cacheKey] && argumentCache.has(arg[cacheKey])) {
-                        args.push(argumentCache.get(arg[cacheKey]));
-                    } else {
-                        args.push(arg);
-                    }
-                }
+                var args = convertArgs(arguments);
                 var context = window;
                 for (var i = 1; i < identifier.length; i++) {
                     context = createNew;
@@ -485,7 +510,6 @@
             assemblyName,
             referenceCallback
         ) => {
-            // console.log({ identifier, assemblyName, referenceCallback })
             var identifier = identifier.split(".");
             var func = window[identifier[0]];
             for (var i = 1; i < identifier.length; i++) {

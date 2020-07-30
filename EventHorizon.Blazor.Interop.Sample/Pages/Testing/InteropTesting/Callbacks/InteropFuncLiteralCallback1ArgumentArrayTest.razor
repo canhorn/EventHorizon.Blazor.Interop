@@ -1,0 +1,66 @@
+﻿<div>
+    <h3>Literal Callback 1 Argument Array Test</h3>
+    <div class="--lighter">Interop FuncArray</div>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        const callbackActions = [];
+        window["InteropFuncLiteralCallback1ArgumentArrayTest"] = {
+            register: (options /* { actionHandler: () => void; } */) => {
+                callbackActions.push(options.actionHandler);
+                return [];
+            },
+            trigger: (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action("string")
+                    );
+                }
+            }
+        };
+    })();
+</script>
+
+@code {
+    public string TEST_ID => "InteropFuncLiteralCallback1ArgumentArrayTest";
+    public TimeSpan TimeTaken { get; set; }
+    const int _max = 100;
+    private bool initialized = false;
+
+    private void HandleRunTest()
+    {
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback<string>((arg1) =>
+            {
+                return Task.CompletedTask;
+            });
+
+            EventHorizonBlazorInterop.FuncArray<string>(
+                new string[] { TEST_ID, "register" },
+                new
+                {
+                    actionHandler,
+                }
+            );
+            initialized = true;
+        }
+
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Func<CachedEntity>(
+            new string[] { TEST_ID, "trigger" },
+            _max
+        );
+    }
+}

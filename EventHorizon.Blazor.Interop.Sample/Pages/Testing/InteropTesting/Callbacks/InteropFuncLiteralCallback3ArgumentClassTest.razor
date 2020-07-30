@@ -1,0 +1,66 @@
+﻿<div>
+    <h3>Literal Callback 3 Argument Class Test</h3>
+    <div class="--lighter">Interop FuncClass</div>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        const callbackActions = [];
+        window["InteropFuncLiteralCallback3ArgumentClassTest"] = {
+            register: (options /* { actionHandler: () => void; } */) => {
+                callbackActions.push(options.actionHandler);
+            },
+            trigger: (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action("string", "string2", "string3")
+                    );
+                }
+            }
+        };
+    })();
+</script>
+
+@code {
+    public string TEST_ID => "InteropFuncLiteralCallback3ArgumentClassTest";
+    public TimeSpan TimeTaken { get; set; }
+    const int _max = 100;
+    private bool initialized = false;
+
+    private void HandleRunTest()
+    {
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback<string, string, string>((arg1, arg2, arg35) =>
+            {
+                return Task.CompletedTask;
+            });
+
+            EventHorizonBlazorInterop.FuncClass<CachedEntity>(
+                entity => new CachedEntity { ___guid = entity.___guid },
+                new string[] { TEST_ID, "register" },
+                new
+                {
+                    actionHandler,
+                }
+            );
+            initialized = true;
+        }
+
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Func<CachedEntity>(
+            new string[] { TEST_ID, "trigger" },
+            _max
+        );
+    }
+}

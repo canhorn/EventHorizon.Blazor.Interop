@@ -106,3 +106,18 @@ app {
 .--bold {
     font-weight: bold;
 }
+
+.--lighter {
+    opacity: 0.6;
+}
+
+.green-badge {
+    background-color: green;
+    color: white;
+    padding: 3px;
+}
+.red-badge {
+    background-color: red;
+    color: white;
+    padding: 3px;
+}

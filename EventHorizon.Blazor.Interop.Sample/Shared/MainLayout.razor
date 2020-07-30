@@ -3,10 +3,49 @@
 <div class="main">
     <div class="top-row">
         <a class="navbar-brand" href="">EventHorizon Blazor Interop</a>
-        <a href="http://blazor.net" target="_blank" class="ml-md-auto">About</a>
+        <button style="padding-right: 10px;" 
+                @onclick="HandleRunAll"
+                title="Click me! I will press all those Run buttons for you!">Run All</button>
+        <a href="/callback/performance">Callback Testing</a>
+        <a href="/callback/validation">Callback Validation</a>
+        <a href="https://github.com/canhorn/EventHorizon.Blazor.Interop" target="_blank" class="ml-md-auto">Repository</a>
     </div>
 
     <div class="content">
         @Body
     </div>
 </div>
+
+<script suppress-error="BL9992">
+    (function () {
+        const buttons = [];
+        window["triggerRunAll"] = () => {
+            if (buttons.length > 0) {
+                return;
+            }
+            const existingButtons = document.querySelectorAll(".run-btn");
+            for (var button of existingButtons) {
+                buttons.push(button);
+            }
+        };
+        setInterval(() => {
+            if (buttons.length === 0) {
+                return;
+            }
+            const button = buttons.shift();
+            button.click();
+        }, 500);
+    })();
+</script>
+
+@code {
+    [Inject]
+    IJSRuntime JSRuntime { get; set; }
+
+    public async Task HandleRunAll()
+    {
+        await JSRuntime.InvokeVoidAsync(
+            "triggerRunAll"
+        );
+    }
+}

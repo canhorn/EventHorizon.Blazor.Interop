@@ -1,0 +1,112 @@
+﻿<div>
+    <h3>Literal Callback Validation</h3>
+    <div class="--lighter">Interop Func</div>
+    <div>
+        Status:
+        @if (TestStatus == "Passed")
+        {
+            <span class="green-badge">@TestStatus</span>
+        }
+        else if (TestStatus == "Failed")
+        {
+            <span class="red-badge">TestStatus</span>
+        }
+        else
+        {
+            <span>@TestStatus</span>
+        }
+    </div>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        const callbackActions = [];
+        window["InteropFuncLiteralValidationTest"] = {
+            register: (options /* { actionHandler: () => void; } */) => {
+                callbackActions.push(options.actionHandler);
+            },
+            trigger: (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action({ id: "class1" }, "string1", { id: "class2" }, "string2", { id: "class3" })
+                    );
+                }
+            }
+        };
+    })();
+</script>
+
+@code {
+    public const int Max = 100;
+    public string TestStatus = "Pending";
+
+    private string testId => "InteropFuncLiteralValidationTest";
+    private bool initialized = false;
+
+    private ClassIdCachedEntity actualClass1;
+    private string expectedClass1 = "class1";
+    private ClassIdCachedEntity actualClass2;
+    private string expectedClass2 = "class2";
+    private ClassIdCachedEntity actualClass3;
+    private string expectedClass3 = "class3";
+    private string actualString1 = string.Empty;
+    private string expectedString1 = "string1";
+    private string actualString2 = string.Empty;
+    private string expectedString2 = "string2";
+
+    private void HandleRunTest()
+    {
+        TestStatus = "Running...";
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback<ClassIdCachedEntity, string, ClassIdCachedEntity, string, ClassIdCachedEntity>((arg1, arg2, arg3, arg4, arg5) =>
+            {
+                actualClass1 = arg1;
+                actualString1 = arg2;
+                actualClass2 = arg3;
+                actualString2 = arg4;
+                actualClass3 = arg5;
+                return Task.CompletedTask;
+            });
+
+            EventHorizonBlazorInterop.Func<string>(
+                new string[] { testId, "register" },
+                new
+                {
+                    actionHandler,
+                }
+            );
+            initialized = true;
+        }
+
+        RunTest();
+        ValidateTest();
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Func<CachedEntity>(
+            new string[] { testId, "trigger" },
+            Max
+        );
+    }
+
+    public void ValidateTest()
+    {
+        var value = actualClass1.Id;
+        if (actualClass1.Id == expectedClass1
+            && actualString1 == expectedString1
+            && actualClass2.Id == expectedClass2
+            && actualString2 == expectedString2
+            && actualClass3.Id == expectedClass3
+        )
+        {
+            TestStatus = "Passed";
+        }
+        else
+        {
+            TestStatus = "Failed";
+        }
+    }
+}

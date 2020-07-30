@@ -41,6 +41,20 @@ window["FuncCallbackClass"] = function () {
     }
 };
 
+const literalCallbackActions = [];
+window["LiteralCallback"] = {
+    register: (options /* { actionHandler: () => void; } */) => {
+        literalCallbackActions.push(options.actionHandler);
+    },
+    trigger: (times) => {
+        for (var i = 0; i < times; i++) {
+            literalCallbackActions.forEach(
+                action => action()
+            );
+        }
+    }
+};
+
 // Primitive 
 window["getPrimitive"] = {
     result: 999,

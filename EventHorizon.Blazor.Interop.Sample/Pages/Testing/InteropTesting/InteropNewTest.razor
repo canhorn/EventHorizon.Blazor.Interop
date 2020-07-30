@@ -4,7 +4,7 @@
 <div>
     <h3>Interop New Test</h3>
     <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
-    <button @onclick="HandleRunTest">Run</button>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
 </div>
 
 @code {
@@ -29,6 +29,5 @@
             new string[] { "URL" },
             "http://hello.world.com"
         );
-        Console.WriteLine(locationHref);
     }
 }

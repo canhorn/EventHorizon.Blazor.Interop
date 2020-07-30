@@ -1,0 +1,66 @@
+﻿<div>
+    <h3>Literal Callback Void Class Test</h3>
+    <div class="--lighter">Interop FuncClass</div>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        const callbackActions = [];
+        window["InteropFuncLiteralCallbackVoidClassTest"] = {
+            register: (options /* { actionHandler: () => void; } */) => {
+                callbackActions.push(options.actionHandler);
+                return {};
+            },
+            trigger: (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action()
+                    );
+                }
+            }
+        };
+    })();
+</script>
+
+@code {
+    public string TEST_ID => "InteropFuncLiteralCallbackVoidClassTest";
+    public TimeSpan TimeTaken { get; set; }
+    private bool initialized = false;
+
+    const int _max = 100;
+    private void HandleRunTest()
+    {
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback(() =>
+            {
+                return Task.CompletedTask;
+            });
+
+            EventHorizonBlazorInterop.FuncClass<CachedEntity>(
+                entity => new CachedEntity { ___guid = entity.___guid },
+                new string[] { TEST_ID, "register" },
+                new
+                {
+                    actionHandler,
+                }
+            );
+            initialized = true;
+        }
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Func<CachedEntity>(
+            new string[] { TEST_ID, "trigger" },
+            _max
+        );
+    }
+}
