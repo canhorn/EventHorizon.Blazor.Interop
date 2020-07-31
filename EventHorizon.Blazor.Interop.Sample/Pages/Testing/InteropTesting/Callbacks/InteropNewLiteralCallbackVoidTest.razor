@@ -1,0 +1,70 @@
+﻿<div>
+    <h3>Literal Callback Void Test</h3>
+    <div class="--lighter">Interop New</div>
+    <ReportTimeTaken Runs="Max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        window["InteropNewLiteralCallbackVoidTest"] = function (options /* { actionHandler: () => void; } */) {
+            const callbackActions = [];
+
+            if (typeof options.actionHandler === "function") {
+                callbackActions.push(options.actionHandler);
+            }
+
+            this.trigger = (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action()
+                    );
+                }
+            };
+        };
+    })();
+</script>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+    public const int Max = 100;
+
+    private string testId => "InteropNewLiteralCallbackVoidTest";
+    private bool initialized = false;
+    private ICachedEntity cachedEntity;
+
+    private void HandleRunTest()
+    {
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback(() =>
+            {
+                return Task.CompletedTask;
+            });
+
+            cachedEntity = EventHorizonBlazorInterop.New(
+                new string[] { testId },
+            new
+            {
+                actionHandler,
+            }
+            );
+            initialized = true;
+        }
+
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / Max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Call(
+            cachedEntity,
+            "trigger",
+            Max
+        );
+    }
+}

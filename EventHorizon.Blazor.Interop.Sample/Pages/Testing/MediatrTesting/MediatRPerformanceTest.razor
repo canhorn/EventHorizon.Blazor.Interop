@@ -4,7 +4,7 @@
 <div>
     <h3>Mediatr Testing</h3>
     <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
-    <button @onclick="HandleRunPerformanceCall_StandardSendEvent">Run</button>
+    <button class="run-btn" @onclick="HandleRunPerformanceCall_StandardSendEvent">Run</button>
 </div>
 
 @code {
@@ -13,7 +13,7 @@
 
     public TimeSpan TimeTaken { get; set; }
 
-    const int _max = 10_000;
+    const int _max = 1_000;
     public async Task HandleRunPerformanceCall_StandardSendEvent()
     {
         var s1 = Stopwatch.StartNew();

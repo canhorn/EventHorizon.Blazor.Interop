@@ -1,0 +1,67 @@
+﻿<div>
+    <h3>Callback with Class Arguments Test</h3>
+    <div class="--lighter">Interop New</div>
+    <ReportTimeTaken Runs="Max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        window["InteropNewCallbackWithClassArgumentsTest"] = function (callbackAction) {
+            const callbackActions = [];
+
+            if (typeof callbackAction === "function") {
+                callbackActions.push(callbackAction);
+            }
+
+            this.trigger = (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action({ id: "class1" }, "string1", { id: "class2" }, "string2", { id: "class3" })
+                    );
+                }
+            };
+        };
+    })();
+</script>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+    public const int Max = 100;
+
+    private string testId => "InteropNewCallbackWithClassArgumentsTest";
+    private bool initialized = false;
+    private ICachedEntity cachedEntity;
+
+    private void HandleRunTest()
+    {
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback<CachedEntity, string, CachedEntity, string, CachedEntity>((arg1, arg2, arg3, arg4, arg5) =>
+            {
+                return Task.CompletedTask;
+            });
+
+            cachedEntity = EventHorizonBlazorInterop.New(
+                new string[] { testId },
+                actionHandler
+            );
+            initialized = true;
+        }
+
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / Max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Call(
+            cachedEntity,
+            "trigger",
+            Max
+        );
+    }
+}

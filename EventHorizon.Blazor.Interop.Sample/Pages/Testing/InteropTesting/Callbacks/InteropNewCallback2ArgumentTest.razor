@@ -1,0 +1,67 @@
+﻿<div>
+    <h3>Callback 2 Argument Test</h3>
+    <div class="--lighter">Interop New</div>
+    <ReportTimeTaken Runs="Max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        window["InteropNewCallback2ArgumentTest"] = function (callbackAction) {
+            const callbackActions = [];
+
+            if (typeof callbackAction === "function") {
+                callbackActions.push(callbackAction);
+            }
+
+            this.trigger = (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action("string", "string2")
+                    );
+                }
+            };
+        };
+    })();
+</script>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+    public const int Max = 100;
+
+    private string testId => "InteropNewCallback2ArgumentTest";
+    private bool initialized = false;
+    private ICachedEntity cachedEntity;
+
+    private void HandleRunTest()
+    {
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback<string, string>((arg1, arg2) =>
+            {
+                return Task.CompletedTask;
+            });
+
+            cachedEntity = EventHorizonBlazorInterop.New(
+                new string[] { testId },
+                actionHandler
+            );
+            initialized = true;
+        }
+
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / Max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Call(
+            cachedEntity,
+            "trigger",
+            Max
+        );
+    }
+}

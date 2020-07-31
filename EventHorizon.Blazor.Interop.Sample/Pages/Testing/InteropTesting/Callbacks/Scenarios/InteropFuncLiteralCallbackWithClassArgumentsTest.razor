@@ -1,0 +1,66 @@
+﻿<div>
+    <h3>Literal Callback with Class Arguments Test</h3>
+    <div class="--lighter">Interop Func</div>
+    <ReportTimeTaken Runs="Max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        const callbackActions = [];
+        window["InteropFuncLiteralWithClassArgumentsTest"] = {
+            register: (options /* { actionHandler: () => void; } */) => {
+                callbackActions.push(options.actionHandler);
+            },
+            trigger: (times) => {
+                for (var i = 0; i < times; i++) {
+                    callbackActions.forEach(
+                        action => action({ id: "class1" }, "string1", { id: "class2" }, "string2", { id: "class3" })
+                    );
+                }
+            }
+        };
+    })();
+</script>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+    public const int Max = 100;
+
+    private string testId => "InteropFuncLiteralWithClassArgumentsTest";
+    private bool initialized = false;
+
+    private void HandleRunTest()
+    {
+        if (!initialized)
+        {
+            var actionHandler = new ActionCallback<CachedEntity, string, CachedEntity, string, CachedEntity>((arg1, arg2, arg3, arg4, arg5) =>
+            {
+                return Task.CompletedTask;
+            });
+
+            EventHorizonBlazorInterop.Func<string>(
+                new string[] { testId, "register" },
+                new
+                {
+                    actionHandler,
+                }
+            );
+            initialized = true;
+        }
+
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / Max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Func<CachedEntity>(
+            new string[] { testId, "trigger" },
+            Max
+        );
+    }
+}

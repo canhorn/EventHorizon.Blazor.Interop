@@ -1,0 +1,48 @@
+﻿@using System.Diagnostics
+@using EventHorizon.Blazor.Interop
+@using EventHorizon.Blazor.BabylonJS.Pages.Testing.InteropTesting.Model
+
+<div>
+    <h3>Interop Literal Callback Test</h3>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+@code {
+    public TimeSpan TimeTaken { get; set; }
+
+
+    protected override void OnInitialized()
+    {
+        var actionHandler = new ActionCallback(() =>
+        {
+            return Task.CompletedTask;
+        });
+
+        EventHorizonBlazorInterop.Func<CachedEntity>(
+            new string[] { "LiteralCallback", "register" },
+            new
+            {
+                actionHandler,
+            }
+        );
+    }
+
+    const int _max = 100;
+    private void HandleRunTest()
+    {
+        var s1 = Stopwatch.StartNew();
+        RunTest();
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Func<CachedEntity>(
+            new string[] { "LiteralCallback", "trigger" },
+            _max
+        );
+    }
+}
