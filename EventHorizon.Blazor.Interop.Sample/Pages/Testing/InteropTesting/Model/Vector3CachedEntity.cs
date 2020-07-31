@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace EventHorizon.Blazor.Interop.Sample.Pages.Testing.InteropTesting.Model
 {
-    [System.Text.Json.Serialization.JsonConverter(typeof(CachedEntityConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(CachedEntityConverter<Vector3CachedEntity>))]
     public class Vector3CachedEntity
-    : CachedEntity
+        : CachedEntity
     {
         public string X
         {

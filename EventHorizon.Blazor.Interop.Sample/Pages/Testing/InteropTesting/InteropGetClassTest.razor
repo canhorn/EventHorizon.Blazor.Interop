@@ -35,9 +35,9 @@
         );
     }
 
-    [System.Text.Json.Serialization.JsonConverter(typeof(CachedEntityConverter))]
+    [System.Text.Json.Serialization.JsonConverter(typeof(CachedEntityConverter<Vector3Class>))]
     public class Vector3Class
-    : CachedEntity
+        : CachedEntity
     {
         public string X
         {

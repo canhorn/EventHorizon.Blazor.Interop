@@ -1,5 +1,5 @@
 ﻿<div>
-    <h3>Callback Validation</h3>
+    <h3>Array Callback Validation</h3>
     <div class="--lighter">Interop New</div>
     <div>
         Status:
@@ -21,7 +21,7 @@
 
 <script suppress-error="BL9992">
     (function () {
-        window["InteropNewCallbackValidationTest"] = function (callbackAction) {
+        window["InteropNewArrayCallbackValidationTest"] = function (callbackAction) {
             const callbackActions = [];
 
             if (typeof callbackAction === "function") {
@@ -30,7 +30,7 @@
 
             this.trigger = () => {
                 callbackActions.forEach(
-                    action => action({ id: "class1" }, "string1", { id: "class2" }, "string2", { id: "class3" })
+                    action => action([{ id: "class1" }, { id: "class2" }, { id: "class3" }])
                 );
             };
         };
@@ -40,7 +40,7 @@
 @code {
     public string TestStatus = "Pending";
 
-    private string testId => "InteropNewCallbackValidationTest";
+    private string testId => "InteropNewArrayCallbackValidationTest";
     private bool initialized = false;
     private ICachedEntity cachedEntity;
 
@@ -50,22 +50,17 @@
     private string expectedClass2 = "class2";
     private ClassIdCachedEntity actualClass3;
     private string expectedClass3 = "class3";
-    private string actualString1 = string.Empty;
-    private string expectedString1 = "string1";
-    private string actualString2 = string.Empty;
-    private string expectedString2 = "string2";
 
     private void HandleRunTest()
     {
+        TestStatus = "Running...";
         if (!initialized)
         {
-            var actionHandler = new ActionCallback<ClassIdCachedEntity, string, ClassIdCachedEntity, string, ClassIdCachedEntity>((arg1, arg2, arg3, arg4, arg5) =>
+            var actionHandler = new ActionCallback<List<ClassIdCachedEntity>>((arg1) =>
             {
-                actualClass1 = arg1;
-                actualString1 = arg2;
-                actualClass2 = arg3;
-                actualString2 = arg4;
-                actualClass3 = arg5;
+                actualClass1 = arg1[0];
+                actualClass2 = arg1[1];
+                actualClass3 = arg1[2];
                 return Task.CompletedTask;
             });
 
@@ -92,9 +87,7 @@
     {
         var value = actualClass1.Id;
         if (actualClass1.Id == expectedClass1
-            && actualString1 == expectedString1
             && actualClass2.Id == expectedClass2
-            && actualString2 == expectedString2
             && actualClass3.Id == expectedClass3
         )
         {

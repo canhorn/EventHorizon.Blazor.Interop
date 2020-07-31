@@ -29,6 +29,24 @@
         return uuid.join("");
     };
     /**
+     * Cache the passed in arg.
+     * Returns null if not defined.
+     * Returns arg if already cached.
+     * @param {any} arg object to validate/cache.
+     */
+    const cacheEntity = (arg) => {
+        if (!arg) {
+            return null;
+        }
+        if (arg[cacheKey]) {
+            return arg;
+        }
+        const newCacheKey = guid();
+        arg[cacheKey] = newCacheKey;
+        argumentCache.set(newCacheKey, arg);
+        return { [cacheKey]: newCacheKey };
+    };
+    /**
      * Check argument for existing in argumentCache and if actionCallbackType.
      * Returns argValue if not part argumentCache or actionCallbackType.
      * 
@@ -44,23 +62,7 @@
             const invokableReference = argValue["invokableReference"];
             const method = argValue["method"];
             return async function () {
-                const args = [];
-                for (var arg of arguments) {
-                    if (typeof (arg) === "object"
-                        && !Array.isArray(arg)
-                    ) {
-                        const newCacheKey = guid();
-                        arg[cacheKey] = newCacheKey;
-                        argumentCache.set(newCacheKey, arg);
-                        args.push({ [cacheKey]: newCacheKey });
-                    } else if (Array.isArray(arg)) {
-                        // TODO: Support Array Response
-                        args.push([]);
-                    } else {
-                        args.push(arg);
-                    }
-                }
-                await invokableReference.invokeMethodAsync(method, ...args);
+                await invokableReference.invokeMethodAsync(method, ...convertCallbackArguments(arguments));
             };
         }
         return argValue;
@@ -91,6 +93,27 @@
         }
         return args;
     };
+    /**
+     * Create a serialization safe set of arguments.
+     * Taking into account arrays and objects
+     * @param {any} callbackArguments array of arguments to sanitize.
+     */
+    const convertCallbackArguments = (callbackArguments) => {
+        const args = [];
+        for (var arg of callbackArguments) {
+            if (typeof (arg) === "object"
+                && !Array.isArray(arg)
+            ) {
+                args.push(cacheEntity(arg));
+            } else if (Array.isArray(arg)) {
+                args.push(arg.map(cacheEntity));
+            } else {
+                args.push(arg);
+            }
+        }
+        return args;
+    };
+
     const cacheKey = "___guid";
     const typeKey = "___type";
     const actionCallbackType = "action_callback";
@@ -479,27 +502,8 @@
             refCache.push(invokableReference);
 
             const cachedEntity = argumentCache.get(entity);
-            cachedEntity[funcCallbackName](function (/* TODO: Support passing back props */) {
-                const args = [];
-                for (var arg of arguments) {
-                    if (typeof (arg) === "object"
-                        && !Array.isArray(arg)
-                    ) {
-                        const newCacheKey = guid();
-                        arg[cacheKey] = newCacheKey;
-                        argumentCache.set(newCacheKey, arg);
-                        args.push({ [cacheKey]: newCacheKey });
-                    } else if (Array.isArray(arg)) {
-                        // TODO: Support Array Response
-                        args.push([]);
-                    } else {
-                        args.push(arg);
-                    }
-                }
-                if (referenceMethod === "CallAddActions") {
-                    console.log({ type: arguments[0].type, entity, funcCallbackName, referenceMethod, invokableReference, arguments, args })
-                }
-                invokableReference.invokeMethodAsync(referenceMethod, ...args);
+            cachedEntity[funcCallbackName](function () {
+                invokableReference.invokeMethodAsync(referenceMethod, ...convertCallbackArguments(arguments));
             });
         },
         /**
