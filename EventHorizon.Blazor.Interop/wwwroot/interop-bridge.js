@@ -503,25 +503,6 @@
 
             const cachedEntity = argumentCache.get(entity);
             cachedEntity[funcCallbackName](function () {
-                const args = [];
-                for (var arg of arguments) {
-                    if (typeof (arg) === "object"
-                        && !Array.isArray(arg)
-                    ) {
-                        const newCacheKey = guid();
-                        arg[cacheKey] = newCacheKey;
-                        argumentCache.set(newCacheKey, arg);
-                        args.push({ [cacheKey]: newCacheKey });
-                    } else if (Array.isArray(arg)) {
-                        // TODO: Support Array Response
-                        args.push(arg.map(convertArg));
-                    } else {
-                        args.push(arg);
-                    }
-                }
-                if (referenceMethod === "CallAddActions") {
-                    console.log({ type: arguments[0].type, entity, funcCallbackName, referenceMethod, invokableReference, arguments, args })
-                }
                 invokableReference.invokeMethodAsync(referenceMethod, ...convertCallbackArguments(arguments));
             });
         },
