@@ -75,7 +75,7 @@
         for (var i = 1; i < argumentArray.length; i++) {
             const arg = convertArg(argumentArray[i]);
 
-            if (typeof (arg) === "object" && !arg[cacheKey] && !Array.isArray(arg)) {
+            if (arg && typeof (arg) === "object" && !arg[cacheKey] && !Array.isArray(arg)) {
                 // Object literal: { prop: "hi", prop2: { ___type: "action_callback" } }
                 const newArg = {};
                 for (const key in arg) {
