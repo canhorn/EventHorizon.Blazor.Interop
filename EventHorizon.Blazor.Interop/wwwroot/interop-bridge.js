@@ -31,7 +31,7 @@
     /**
      * Cache the passed in arg.
      * Returns null if not defined.
-     * Returns arg if already cached.
+     * Returns cacheKey only if already cached.
      * @param {any} arg object to validate/cache.
      */
     const cacheEntity = (arg) => {
@@ -39,7 +39,7 @@
             return null;
         }
         if (arg[cacheKey]) {
-            return arg;
+            return { [cacheKey]: arg[cacheKey] };
         }
         const newCacheKey = guid();
         arg[cacheKey] = newCacheKey;
