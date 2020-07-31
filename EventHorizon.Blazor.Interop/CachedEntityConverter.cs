@@ -4,19 +4,19 @@ using System.Text.Json.Serialization;
 
 namespace EventHorizon.Blazor.Interop
 {
-    public class CachedEntityConverter
-        : JsonConverter<CachedEntity>
+    public class CachedEntityConverter<T>
+        : JsonConverter<T> where T : CachedEntity
     {
         public override bool CanConvert(Type typeToConvert) =>
-            typeof(CachedEntity).IsAssignableFrom(typeToConvert);
+            typeof(T).IsAssignableFrom(typeToConvert);
 
-        public override CachedEntity Read(
+        public override T Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
             JsonSerializerOptions options
         )
         {
-            var entity = (CachedEntity)Activator.CreateInstance(typeToConvert);
+            var entity = (T)Activator.CreateInstance(typeToConvert);
 
             while (reader.Read())
             {
@@ -41,8 +41,8 @@ namespace EventHorizon.Blazor.Interop
         }
 
         public override void Write(
-            Utf8JsonWriter writer, 
-            CachedEntity value, 
+            Utf8JsonWriter writer,
+            T value,
             JsonSerializerOptions options
         )
         {

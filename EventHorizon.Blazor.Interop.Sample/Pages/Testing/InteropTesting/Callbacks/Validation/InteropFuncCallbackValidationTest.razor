@@ -26,19 +26,16 @@
             register: (actionHandler) => {
                 callbackActions.push(actionHandler);
             },
-            trigger: (times) => {
-                for (var i = 0; i < times; i++) {
-                    callbackActions.forEach(
-                        action => action({ id: "class1" }, "string1", { id: "class2" }, "string2", { id: "class3" })
-                    );
-                }
+            trigger: () => {
+                callbackActions.forEach(
+                    action => action({ id: "class1" }, "string1", { id: "class2" }, "string2", { id: "class3" })
+                );
             }
         };
     })();
 </script>
 
 @code {
-    public const int Max = 100;
     public string TestStatus = "Pending";
 
     private string testId => "InteropFuncCallbackValidationTest";
@@ -84,8 +81,7 @@
     public void RunTest()
     {
         EventHorizonBlazorInterop.Func<CachedEntity>(
-            new string[] { testId, "trigger" },
-            Max
+            new object[] { new string[] { testId, "trigger" } }
         );
     }
 
