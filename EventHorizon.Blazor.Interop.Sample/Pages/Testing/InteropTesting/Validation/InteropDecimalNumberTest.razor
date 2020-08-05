@@ -1,0 +1,62 @@
+﻿<div>
+    <h3>Literal Decimal Number Validation</h3>
+    <div class="--lighter">Interop Get</div>
+    <div>
+        Status:
+        @if (TestStatus == "Passed")
+        {
+            <span class="green-badge">@TestStatus</span>
+        }
+        else if (TestStatus == "Failed")
+        {
+            <span class="red-badge">TestStatus</span>
+        }
+        else
+        {
+            <span>@TestStatus</span>
+        }
+    </div>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        window["LiteralDecimalNumberValidationTest"] = {
+            value: 0.0000000000000001224646852585,
+        };
+    })();
+</script>
+
+@code {
+    public string TestStatus = "Pending";
+
+    private string testId => "LiteralDecimalNumberValidationTest";
+    private decimal result;
+    private decimal expected = 0.0000000000000001224646852585m;
+
+    private void HandleRunTest()
+    {
+        RunTest();
+        ValidateTest();
+    }
+
+    public void RunTest()
+    {
+        result = EventHorizonBlazorInterop.Get<decimal>(
+            testId,
+            "value"
+        );
+    }
+
+    public void ValidateTest()
+    {
+        if (result == expected)
+        {
+            TestStatus = "Passed";
+        }
+        else
+        {
+            TestStatus = "Failed";
+        }
+    }
+}

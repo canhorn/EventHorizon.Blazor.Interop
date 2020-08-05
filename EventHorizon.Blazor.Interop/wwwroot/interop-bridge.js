@@ -113,6 +113,34 @@
         }
         return args;
     };
+    /**
+     * toString a number so it can be parsed by .NET.
+     * @param {any} num
+     */
+    const numberToString = (num) => {
+        let numStr = String(num);
+
+        if (Math.abs(num) < 1.0) {
+            let e = parseInt(num.toString().split('e-')[1]);
+            if (e) {
+                let negative = num < 0;
+                if (negative) num *= -1
+                num *= Math.pow(10, e - 1);
+                numStr = '0.' + (new Array(e)).join('0') + num.toString().substring(2);
+                if (negative) numStr = "-" + numStr;
+            }
+        }
+        else {
+            let e = parseInt(num.toString().split('+')[1]);
+            if (e > 20) {
+                e -= 20;
+                num /= Math.pow(10, e);
+                numStr = num.toString() + (new Array(e + 1)).join('0');
+            }
+        }
+
+        return numStr;
+    };
 
     const cacheKey = "___guid";
     const typeKey = "___type";
@@ -141,7 +169,7 @@
                 }
 
                 if (typeof (value) === "number") {
-                    value = value.toString();
+                    value = numberToString(value);
                 }
                 return BINDING.js_to_mono_obj(value);
             } catch (ex) {
