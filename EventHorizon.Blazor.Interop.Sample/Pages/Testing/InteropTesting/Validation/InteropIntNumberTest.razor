@@ -1,0 +1,62 @@
+﻿<div>
+    <h3>Literal Int Number Validation</h3>
+    <div class="--lighter">Interop Get</div>
+    <div>
+        Status:
+        @if (TestStatus == "Passed")
+        {
+            <span class="green-badge">@TestStatus</span>
+        }
+        else if (TestStatus == "Failed")
+        {
+            <span class="red-badge">TestStatus</span>
+        }
+        else
+        {
+            <span>@TestStatus</span>
+        }
+    </div>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        window["LiteralIntNumberValidationTest"] = {
+            value: 2147483647,
+        };
+    })();
+</script>
+
+@code {
+    public string TestStatus = "Pending";
+
+    private string testId => "LiteralIntNumberValidationTest";
+    private int result;
+    private int expected = int.MaxValue;
+
+    private void HandleRunTest()
+    {
+        RunTest();
+        ValidateTest();
+    }
+
+    public void RunTest()
+    {
+        result = EventHorizonBlazorInterop.Get<int>(
+            testId,
+            "value"
+        );
+    }
+
+    public void ValidateTest()
+    {
+        if (result == expected)
+        {
+            TestStatus = "Passed";
+        }
+        else
+        {
+            TestStatus = "Failed";
+        }
+    }
+}
