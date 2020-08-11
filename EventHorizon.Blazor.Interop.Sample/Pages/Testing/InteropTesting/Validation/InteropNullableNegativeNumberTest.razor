@@ -1,5 +1,5 @@
 ﻿<div>
-    <h3>Literal Float Number Validation</h3>
+    <h3>Nullable Negative Number Validation</h3>
     <div class="--lighter">Interop Get</div>
     <div>
         Status:
@@ -21,8 +21,8 @@
 
 <script suppress-error="BL9992">
     (function () {
-        window["LiteralFloatNumberValidationTest"] = {
-            value: 0.0000000000000001224646852585,
+        window["InteropNullableNegativeNumberTest"] = {
+            value: -1234,
         };
     })();
 </script>
@@ -30,9 +30,9 @@
 @code {
     public string TestStatus = "Pending";
 
-    private string testId => "LiteralFloatNumberValidationTest";
-    private float result;
-    private float expected = 0.0000000000000001224646852585f;
+    private string testId => "InteropNullableNegativeNumberTest";
+    private long? result;
+    private long expected = -1234;
 
     private void HandleRunTest()
     {
@@ -42,10 +42,16 @@
 
     public void RunTest()
     {
-        result = EventHorizonBlazorInterop.Get<float>(
-            testId,
-            "value"
-        );
+        try
+        {
+            result = EventHorizonBlazorInterop.Get<long?>(
+                testId,
+                "value"
+            );
+        }
+        catch (Exception)
+        {
+        }
     }
 
     public void ValidateTest()

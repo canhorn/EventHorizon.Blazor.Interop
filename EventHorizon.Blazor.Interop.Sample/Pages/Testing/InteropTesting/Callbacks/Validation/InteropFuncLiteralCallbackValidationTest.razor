@@ -5,15 +5,15 @@
         Status:
         @if (TestStatus == "Passed")
         {
-            <span class="green-badge">@TestStatus</span>
+        <span class="green-badge">@TestStatus</span>
         }
         else if (TestStatus == "Failed")
         {
-            <span class="red-badge">TestStatus</span>
+        <span class="red-badge">@TestStatus</span>
         }
         else
         {
-            <span>@TestStatus</span>
+        <span>@TestStatus</span>
         }
     </div>
     <button class="run-btn" @onclick="HandleRunTest">Run</button>
