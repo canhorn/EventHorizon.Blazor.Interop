@@ -2,6 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net5.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <AssemblyTitle>EventHorizon Blazor Interop</AssemblyTitle>
         <Description>Utilities that make Blazor WASM C# interfacing with JavaScript easier, will triggers corresponding JavaScript functionality.</Description>

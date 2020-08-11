@@ -4,12 +4,18 @@ using System.Text.Json.Serialization;
 
 namespace EventHorizon.Blazor.Interop
 {
+    /// <summary>
+    /// This helps with the payload of passing a CacheEntity between the C# and client.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class CachedEntityConverter<T>
         : JsonConverter<T> where T : CachedEntity
     {
+        /// <inheritdoc />
         public override bool CanConvert(Type typeToConvert) =>
             typeof(T).IsAssignableFrom(typeToConvert);
 
+        /// <inheritdoc />
         public override T Read(
             ref Utf8JsonReader reader,
             Type typeToConvert,
@@ -40,6 +46,7 @@ namespace EventHorizon.Blazor.Interop
             throw new JsonException("___guid was not found");
         }
 
+        /// <inheritdoc />
         public override void Write(
             Utf8JsonWriter writer,
             T value,

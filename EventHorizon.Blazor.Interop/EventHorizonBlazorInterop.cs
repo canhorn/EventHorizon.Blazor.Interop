@@ -8,24 +8,37 @@
 
     /// <summary>
     /// Contains generic abstraction around JavaScript making corresponding calls in JavaScript when used.
-    /// 
-    /// Make sure to [JsonConverter(typeof(CachedEntityConverter))] any CacheEntities used in the Class Typed calls.
-    /// 
+    /// <br />
+    /// <br />
+    /// Make sure to append the attribute <code>[JsonConverter(typeof(CachedEntityConverter))]</code> to custom <see cref="CachedEntity" /> created.
     /// </summary>
     public static class EventHorizonBlazorInterop
     {
+        /// <summary>
+        /// This is the WebAssemblyJSRuntime cast from JSRuntime.
+        /// This provides very low level, not supported API that allow for high performances calls to the WASM layer.
+        /// </summary>
         public static WebAssemblyJSRuntime RUNTIME => JSRuntime as WebAssemblyJSRuntime;
+        /// <summary>
+        /// This is used to access the Client from .NET.
+        /// </summary>
         public static IJSRuntime JSRuntime { get; set; }
 
         /// <summary>
         /// Call a specific function on ICachedEntity implementation.
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.Call(
         ///     this, /* ICachedEntity */ 
         ///     "attachControl", /* Function Name/Key */
         ///     arguments[1...n]
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// 
         /// </summary>
         /// <param name="args"></param>
         public static void Call(
@@ -40,15 +53,22 @@
 
         /// <summary>
         /// This will call a function on a passed in identifier, root starts at window.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Primitive
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.Func<string>(
         ///     "document.createElement",
         ///     [n...arguments]
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">Primitive type should be returned.</typeparam>
@@ -66,16 +86,23 @@
 
         /// <summary>
         /// This will call a function on a passed in identifier, root starts at window.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Class
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.FuncClass<Vector3>(
         ///     entity => new Vector3(entity),
         ///     "document.createElement",
         ///     [n...arguments]
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">The type of class to response with.</typeparam>
@@ -96,15 +123,22 @@
 
         /// <summary>
         /// This will call a function on a passed in identifier, root starts at window.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Array of Primitives
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.FuncArray<string>(
         ///     "document.createElement",
         ///     [n...arguments]
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">Primitive type the array should be returned as.</typeparam>
@@ -122,16 +156,23 @@
 
         /// <summary>
         /// This will call a function on a passed in identifier, root starts at window.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Array of Classes
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.FuncArrayClass<Vector3>(
         ///     entity => new Vector3(entity),
         ///     "document.createElement",
         ///     [n...arguments]
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">The type of the Class the array should return.</typeparam>
@@ -160,15 +201,22 @@
 
         /// <summary>
         /// This will return a primitive property value, root starts at window.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Primitive
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.Get<Vector3>(
         ///     entity => new Vector3(entity),
         ///     "document.createElement"
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">Primitive type the result should be.</typeparam>
@@ -193,23 +241,31 @@
             }
             return (T)Convert.ChangeType(
                 result,
-                typeof(T)
+                Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)
             );
         }
 
         /// <summary>
         /// This will return a Class property value, root starts at window.
+        /// <br />
         /// On classBuilder call it will pass in the cached entity from the response.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Class
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.GetClass<Vector3>(
         ///     playerCachedEntity.___guid,
         ///     "position"
         ///     entity => new Vector3(entity),
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">Class type the result should be.</typeparam>
@@ -236,16 +292,23 @@
 
         /// <summary>
         /// This will return a class array property value, root starts at window.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Array of Primitives
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.GetArrayClass<Vector3>(
         ///     npcCachedEntity.___guid,
         ///     "pathToPlayer"
         ///     entity => new Vector3(entity),
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">Class type the array result should be.</typeparam>
@@ -277,15 +340,22 @@
 
         /// <summary>
         /// This will return a primitive array property value, root starts at window.
-        /// 
-        /// Identifier can be ICachedEntity.___guid key;
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
         /// Support: Array of Primitives
         /// 
-        /// Example Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.GetArray<string>(
         ///     playerCachedEntity.___guid,
         ///     "tags"
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <typeparam name="T">Primitive type the array result should be.</typeparam>
@@ -306,22 +376,31 @@
 
         /// <summary>
         /// This will call 'new' on the class/function identifier passed in, root starts at window.
-        /// 
+        /// <br />
+        /// <br />
         /// Identifier: A '.' separated string of identifiers .
         /// 
-        /// Usage:
+        /// <example>
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.New(
         ///     "BABYLON.Vector3",
         ///     [n...arguments]
         /// );
+        /// ]]>
+        /// </code>
         /// 
-        /// Example:
+        /// <code>
+        /// <![CDATA[
         /// EventHorizonBlazorInterop.New(
         ///     "BABYLON.Vector3",
         ///     1,
         ///     2,
         ///     3
         /// );
+        /// ]]>
+        /// </code>
+        /// </example>
         /// 
         /// </summary>
         /// <param name="args">The identifier and any arguments to pass into constructor.</param>
@@ -338,8 +417,10 @@
 
         /// <summary>
         /// Create a JavaScript "Function" on the client based on the script, cached based on methodName.
-        /// 
+        /// <br />
+        /// <br />
         /// Scripts are cached client-side, so they are not built every time it is called.
+        /// <br />
         /// Arguments can be passed to script, they can be accessed from the script body using '$args'.
         /// 
         /// </summary>
@@ -366,6 +447,7 @@
 
         /// <summary>
         /// This will call the passed in property funcCallbackName on the entity with a callback function.
+        /// <br />
         /// On callback calls it will cache the objects and pass them through the CachedEntityConverter to marshal the arguments.
         /// 
         /// </summary>
@@ -394,9 +476,11 @@
 
         /// <summary>
         /// This will call the identifier, from window, and attached a callback function to it.
-        /// 
+        /// <br />
+        /// <br />
         /// Does NOT take into account the identifier could be an CachedEntity.
-        /// 
+        /// <br />
+        /// <br />
         /// Identifier: A '.' separated string of identifiers.
         /// 
         /// </summary>
@@ -422,7 +506,7 @@
         /// This will take the value and set it on the root property. 
         /// 
         /// </summary>
-        /// <param name="root">Property name from window or ICachedEntity.___guid.</param>
+        /// <param name="root">Property name from window or <see cref="ICachedEntity.___guid"/>.</param>
         /// <param name="identifier">The property from root that the value should be set on.</param>
         /// <param name="value">The value that should be set on the root identifier property.</param>
         public static void Set(
@@ -440,10 +524,10 @@
         }
 
         /// <summary>
-        /// This takes in a ICacheEntity.___guid and property adding the returned value into the cache on the client.
+        /// This takes in a <see cref="ICachedEntity.___guid"/> and property adding the returned value into the cache on the client.
         /// 
         /// </summary>
-        /// <param name="identifier">The ICachedEntity.___guid on the client.</param>
+        /// <param name="identifier">The <see cref="ICachedEntity.___guid"/> on the client.</param>
         /// <param name="prop">The property on the root the value should be from.</param>
         /// <returns>The cache identifier of the prop value.</returns>
         public static ICachedEntity cacheEntity(
