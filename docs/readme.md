@@ -1,3 +1,22 @@
+# 2020-09-15 Details
+
+With the update to .NET 5 RC1 helps to increase the performance back to was it was before the .NET 5 upgrade.
+
+***2020-09-15_Ran_Performance_Tests Part 1***
+<img src="./performance/2020-09-15_Ran_Performance_Tests_1.png" />
+
+***2020-09-15_Ran_Performance_Tests Part 2***
+<img src="./performance/2020-09-15_Ran_Performance_Tests_2.png" />
+
+# 2020-08-25 Details
+
+With the update to .NET 5 Preview8 helps to increase the performance back to was it was before the .NET 5 upgrade.
+
+***2020-08-25_Ran_Performance_Tests Part 1***
+<img src="./performance/2020-08-25_Ran_Performance_Tests_1.png" />
+
+***2020-08-25_Ran_Performance_Tests Part 2***
+<img src="./performance/2020-08-25_Ran_Performance_Tests_2.png" />
 
 # 2020-07-30 Details
 
