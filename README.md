@@ -31,15 +31,13 @@ The EventHorizon.Blazor.Interop.Sample Project contains a suite of performance t
 
 ## Use Libraries
 
-[BlazorJsFastDataExchanger](https://github.com/Lupusa87/BlazorJsFastDataExchanger)
-
 [MediatR](https://github.com/jbogard/MediatR)
-
-[Mono.WebAssembly.Interop](https://www.nuget.org/packages/Mono.WebAssembly.Interop)
 
 ## Inspiration
 
+- [BlazorJsFastDataExchanger](https://github.com/Lupusa87/BlazorJsFastDataExchanger)
 - [BlazorUnmarshalledCanvas](https://github.com/jhwcn/BlazorUnmarshalledCanvas/blob/master/UmCanvas/Canvas.cs)
+- [Mono.WebAssembly.Interop](https://www.nuget.org/packages/Mono.WebAssembly.Interop)
 
 ## Future Work
 

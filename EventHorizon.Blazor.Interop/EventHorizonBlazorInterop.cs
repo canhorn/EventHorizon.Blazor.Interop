@@ -228,7 +228,7 @@
             string prop
         )
         {
-            var result = RUNTIME.InvokeUnmarshalled<ValueTuple<string, string>, string>(
+            var result = ((IJSUnmarshalledRuntime)RUNTIME).InvokeUnmarshalled<ValueTuple<string, string>, string>(
                 "blazorInterop.get",
                 ValueTuple.Create(
                     root,
@@ -279,7 +279,7 @@
             Func<ICachedEntity, T> classBuilder
         )
         {
-            var result = RUNTIME.InvokeUnmarshalled<ValueTuple<string, string>, string>(
+            var result = ((IJSUnmarshalledRuntime)RUNTIME).InvokeUnmarshalled<ValueTuple<string, string>, string>(
                 "blazorInterop.getClass",
                 ValueTuple.Create(
                     root,
