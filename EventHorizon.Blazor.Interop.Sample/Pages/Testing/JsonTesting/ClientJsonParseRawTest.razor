@@ -1,5 +1,4 @@
 ﻿@using System.Diagnostics
-@using Mono.WebAssembly.Interop;
 
 <div>
     <h3>Client Json Parse Raw Test</h3>
@@ -8,7 +7,8 @@
 </div>
 
 @code {
-    public static MonoWebAssemblyJSRuntime RUNTIME = new MonoWebAssemblyJSRuntime();
+    [Inject]
+    public IJSRuntime JSRuntime { get; set; }
 
     public TimeSpan TimeTaken { get; set; }
 
@@ -28,7 +28,7 @@
 
     public void StandardTest()
     {
-        RUNTIME.InvokeUnmarshalled<ValueTuple<string>, string>(
+        ((IJSUnmarshalledRuntime)JSRuntime).InvokeUnmarshalled<ValueTuple<string>, string>(
             "bridge.jsonParseRaw",
             ValueTuple.Create(@"{ ""Type"": ""event_to_run"" }")
         );
