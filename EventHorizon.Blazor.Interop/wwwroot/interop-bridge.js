@@ -462,7 +462,10 @@
             return [];
         },
         /**
-         * This will call a through an identifier's a function from window as the root.
+         * This will call a function based on the identifier, with the arguments passed.
+         *
+         * - 'window' is root
+         *
          * arguments[0] = Identifier
          * arguments[1...n] = Function Arguments
          **/
@@ -481,6 +484,146 @@
                 }
 
                 var funcResults = createNew.call(context, ...args);
+                const results = [];
+                for (var value of funcResults) {
+                    if (!argumentCache.has(value[cacheKey])) {
+                        // Add to cache
+                        const newCacheKey = guid();
+                        value[cacheKey] = newCacheKey;
+                        argumentCache.set(newCacheKey, value);
+                    }
+                    results.push(value[cacheKey]);
+                }
+
+                return results;
+            } catch (ex) {
+                console.log("error", ex);
+            }
+            return [];
+        },
+        /**
+         * This will call a Promise based on the identifier, with the arguments passed.
+         *
+         * - 'window' is root
+         *
+         * arguments[0] = Identifier
+         * arguments[1...n] = Function Arguments
+         *
+         * @returns primitive
+         * */
+        task: async function () {
+            try {
+                var identifier = arguments[0];
+                var obj = window[identifier[0]];
+                if (argumentCache.has(identifier[0])) {
+                    obj = argumentCache.get(identifier[0]);
+                }
+                var args = convertArgs(arguments);
+                var context = window;
+                for (var i = 1; i < identifier.length; i++) {
+                    context = obj;
+                    obj = obj[identifier[i]];
+                }
+                return await obj.call(context, ...args);
+            } catch (ex) {
+                console.log("error", ex);
+            }
+            return undefined;
+        },
+        /**
+         * This will call a Promise based on the identifier, with the arguments passed.
+         *
+         * - 'window' is root
+         *
+         * arguments[0] = Identifier
+         * arguments[1...n] = Function Arguments
+         *
+         * @returns Class Entity Identifier
+         * */
+        taskClass: async function () {
+            try {
+                var identifier = arguments[0];
+                var obj = window[identifier[0]];
+                if (argumentCache.has(identifier[0])) {
+                    obj = argumentCache.get(identifier[0]);
+                }
+                var args = convertArgs(arguments);
+                var context = window;
+                for (var i = 1; i < identifier.length; i++) {
+                    context = obj;
+                    obj = obj[identifier[i]];
+                }
+                var newObject = await obj.call(context, ...args);
+                if (typeof (newObject) === "object"
+                    && !Array.isArray(newObject)
+                ) {
+                    const newCacheKey = guid();
+                    newObject[cacheKey] = newCacheKey;
+                    argumentCache.set(newCacheKey, newObject);
+                    return newCacheKey;
+                }
+            } catch (ex) {
+                console.log("error", ex);
+            }
+            return undefined;
+        },
+        /**
+         * This will call a Promise based on the identifier, with the arguments passed.
+         *
+         * - 'window' is root
+         *
+         * arguments[0] = Identifier
+         * arguments[1...n] = Function Arguments
+         *
+         * @returns Array of primitives
+         * */
+        taskArray: async function () {
+            try {
+                var identifier = arguments[0];
+                var createNew = window[identifier[0]];
+                if (argumentCache.has(identifier[0])) {
+                    createNew = argumentCache.get(identifier[0]);
+                }
+                var args = convertArgs(arguments);
+                var context = window;
+                for (var i = 1; i < identifier.length; i++) {
+                    context = createNew;
+                    createNew = createNew[identifier[i]];
+                }
+                var result = await createNew.call(context, ...args);
+                if (Array.isArray(result)) {
+                    return result;
+                }
+            } catch (ex) {
+                console.log("error", ex);
+            }
+            return [];
+        },
+        /**
+         * This will call a Promise based on the identifier, with the arguments passed.
+         *
+         * - 'window' is root
+         *
+         * arguments[0] = Identifier
+         * arguments[1...n] = Function Arguments
+         *
+         * @returns Array of Class Entities
+         * */
+        taskArrayClass: async function () {
+            try {
+                var identifier = arguments[0];
+                var createNew = window[identifier[0]];
+                if (argumentCache.has(identifier[0])) {
+                    createNew = argumentCache.get(identifier[0]);
+                }
+                var args = convertArgs(arguments);
+                var context = window;
+                for (var i = 1; i < identifier.length; i++) {
+                    context = createNew;
+                    createNew = createNew[identifier[i]];
+                }
+
+                var funcResults = await createNew.call(context, ...args);
                 const results = [];
                 for (var value of funcResults) {
                     if (!argumentCache.has(value[cacheKey])) {

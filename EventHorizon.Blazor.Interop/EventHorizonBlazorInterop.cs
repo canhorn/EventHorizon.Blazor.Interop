@@ -541,6 +541,163 @@
                 prop
             );
         }
+
+
+        /// <summary>
+        /// This will call a promise based on the identifier, returning a primitive.
+        /// <br />
+        /// Root starts at 'window'
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
+        /// Support: Primitive
+        /// 
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// EventHorizonBlazorInterop.Task<string>(
+        ///     "document.createElement",
+        ///     [n...arguments]
+        /// );
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">Primitive Type of Result.</typeparam>
+        /// <param name="args">The identifier and any arguments to passed into Promise function.</param>
+        /// <returns>The result of the Promise call.</returns>
+        public static ValueTask<T> Task<T>(
+            params object[] args
+        )
+        {
+            return RUNTIME.InvokeAsync<T>(
+                "blazorInterop.task",
+                args
+            );
+        }
+
+        /// <summary>
+        /// This will call a promise based on the identifier, returning a Class.
+        /// <br />
+        /// Root starts at 'window'
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
+        /// Support: Class
+        /// 
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// EventHorizonBlazorInterop.TaskClass<Vector3>(
+        ///     entity => new Vector3(entity),
+        ///     "document.createElement",
+        ///     [n...arguments]
+        /// );
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">Class Type of Result.</typeparam>
+        /// <param name="classBuilder">The builder used to create a class from, passes in CachedEntity from client.</param>
+        /// <param name="args">The identifier and any arguments to passed in Promise function call.</param>
+        /// <returns>The result of the Promise call.</returns>
+        public static async ValueTask<T> TaskClass<T>(
+            Func<ICachedEntity, T> classBuilder,
+            params object[] args
+        )
+        {
+            var cacheKey = await RUNTIME.InvokeAsync<string>(
+                "blazorInterop.taskClass",
+                args
+            );
+            return classBuilder(new CachedEntity { ___guid = cacheKey });
+        }
+
+        /// <summary>
+        /// This will call a promise based on the identifier, returning an Array of Primitives.
+        /// <br />
+        /// Root starts at 'window'
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
+        /// Support: Array of Primitives
+        /// 
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// EventHorizonBlazorInterop.TaskArray<string>(
+        ///     "document.createElement",
+        ///     [n...arguments]
+        /// );
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">Primitive Type of Result.</typeparam>
+        /// <param name="args">The identifier and any arguments to passed into the Promise function call.</param>
+        /// <returns>The Array result of the Promise call.</returns>
+        public static ValueTask<T[]> TaskArray<T>(
+            params object[] args
+        )
+        {
+            return RUNTIME.InvokeAsync<T[]>(
+                "blazorInterop.taskArray",
+                args
+            );
+        }
+
+        /// <summary>
+        /// This will call a promise based on the identifier, returning an Array of Classes.
+        /// <br />
+        /// Root starts at 'window'
+        /// <br />
+        /// <br />
+        /// Identifier can be <see cref="ICachedEntity.___guid"/>
+        /// <br />
+        /// Support: Array of Classes
+        /// 
+        /// <example>
+        /// <code>
+        /// <![CDATA[
+        /// EventHorizonBlazorInterop.FuncArrayClass<Vector3>(
+        ///     entity => new Vector3(entity),
+        ///     "document.createElement",
+        ///     [n...arguments]
+        /// );
+        /// ]]>
+        /// </code>
+        /// </example>
+        /// 
+        /// </summary>
+        /// <typeparam name="T">Class Type of Result.</typeparam>
+        /// <param name="classBuilder">Used to build the Classes in the Array, passes in CachedEntity from client.</param>
+        /// <param name="args">The identifier and any arguments to passed into the Promise function call.</param>
+        /// <returns>The Class Array result of the Promise call.</returns>
+        public static async ValueTask<T[]> TaskArrayClass<T>(
+            Func<ICachedEntity, T> classBuilder,
+            params object[] args
+        )
+        {
+            var results = await RUNTIME.InvokeAsync<string[]>(
+                "blazorInterop.taskArrayClass",
+                args
+            );
+            var array = new T[results.Length];
+            var index = 0;
+            foreach (var result in results)
+            {
+                array[index] = classBuilder(new CachedEntity { ___guid = result });
+                index++;
+            }
+
+            return array;
+        }
     }
 
     internal struct JavaScriptMethodRunner
