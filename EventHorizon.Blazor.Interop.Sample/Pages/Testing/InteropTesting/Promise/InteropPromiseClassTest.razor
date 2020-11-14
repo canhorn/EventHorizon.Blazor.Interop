@@ -1,0 +1,48 @@
+﻿<div>
+    <h3>Promise Class Test</h3>
+    <div class="--lighter">Interop TaskClass</div>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        window["InteropPromiseClassTest"] = {
+            promise: (arg1, arg2) => new Promise((resolve, reject) => {
+                resolve({
+                    message: "Hello From Promise",
+                    arg1,
+                    arg2,
+                })
+            })
+        };
+    })();
+</script>
+
+@code {
+    public string TEST_ID => "InteropPromiseClassTest";
+    public TimeSpan TimeTaken { get; set; }
+    const int _max = 100;
+
+    private async Task HandleRunTest()
+    {
+        var s1 = Stopwatch.StartNew();
+        for (int i = 0; i < _max; i++)
+        {
+            await RunTest();
+        }
+        s1.Stop();
+        TimeTaken = s1.Elapsed;
+        Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
+    }
+
+    public async Task RunTest()
+    {
+        var result = await EventHorizonBlazorInterop.TaskClass<CachedEntity>(
+            entity => new CachedEntity { ___guid = entity.___guid },
+            new string[] { TEST_ID, "promise" },
+            "arg1",
+            "arg2"
+        );
+    }
+}

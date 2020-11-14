@@ -28,7 +28,7 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: '5.0.100-rc.2.20479.15'
+        dotnet-version: '5.0.100'
     - name: Build with dotnet
       run: dotnet build --configuration Release ./EventHorizon.Blazor.Interop/EventHorizon.Blazor.Interop.csproj
     - name: Pack with dotnet
