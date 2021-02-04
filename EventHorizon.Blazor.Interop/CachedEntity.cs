@@ -9,6 +9,6 @@ namespace EventHorizon.Blazor.Interop
     public class CachedEntity : ICachedEntity
     {
         /// <inheritdoc />
-        public string ___guid { get; set; }
+        public CachedEntityRef ___guid { get; set; }
     }
 }

@@ -370,9 +370,7 @@
                 var newObject = new createNew(...args);
                 newObject[cacheKey] = guid();
                 argumentCache.set(newObject[cacheKey], newObject);
-                return {
-                    [cacheKey]: newObject[cacheKey]
-                };
+                return newObject[cacheKey];
             } catch (ex) {
                 console.log("error", ex);
             }
@@ -706,9 +704,10 @@
             var newObject = cachedEntity[prop];
             newObject[cacheKey] = guid();
             argumentCache.set(newObject[cacheKey], newObject);
-            return {
-                [cacheKey]: newObject[cacheKey]
-            };
+            return newObject[cacheKey];
+        },
+        removeEntity: (identifier) => {
+            argumentCache.delete(identifier);
         },
     };
 })();

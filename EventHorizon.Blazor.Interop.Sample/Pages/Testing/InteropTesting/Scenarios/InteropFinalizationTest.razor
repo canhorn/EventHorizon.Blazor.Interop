@@ -1,0 +1,87 @@
+﻿<div>
+    <h3>Finalization Validation</h3>
+    <div class="--lighter"></div>
+    <div>
+        Status:
+        @if (TestStatus == "Passed")
+        {
+            <span class="green-badge">@TestStatus</span>
+        }
+        else if (TestStatus == "Failed")
+        {
+            <span class="red-badge">@TestStatus</span>
+        }
+        else
+        {
+            <span>@TestStatus</span>
+        }
+    </div>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+
+@code {
+    public string TestStatus = "Pending";
+
+    private int result;
+    private int expected;
+
+    private async Task HandleRunTest()
+    {
+        result = 0;
+
+        await RunTest();
+        ValidateTest();
+    }
+
+    public async Task RunTest()
+    {
+        var list = CreateEntities();
+
+        GC.Collect();
+
+        // GC won't collect until we release the thread, so we offload
+        // the rest of it to be completed async.
+        await Task.Delay(10);
+
+        foreach (var guid in list)
+        {
+            var value = EventHorizonBlazorInterop.Get<string>(guid, "X");
+            if (value is not null)
+                result++;
+        }
+    }
+
+    static List<string> CreateEntities()
+    {
+        var list = new List<string>();
+
+        for (var i = 0; i < 100; i++)
+        {
+            var entity = EventHorizonBlazorInterop.FuncClass(
+                e => new Vector3CachedEntity(e),
+                new object[]
+                {
+                    new[] { "funcClass", "func" },
+                }
+                );
+
+            list.Add(entity.___guid);
+        }
+
+        return list;
+    }
+
+    public void ValidateTest()
+    {
+        if (result == expected)
+        {
+            TestStatus = "Passed";
+        }
+        else
+        {
+            TestStatus = "Failed";
+        }
+    }
+
+}
