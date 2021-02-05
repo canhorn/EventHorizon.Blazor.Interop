@@ -4,6 +4,10 @@ using System.Text.Json.Serialization;
 
 namespace EventHorizon.Blazor.Interop
 {
+    /// <summary>
+    /// Represents a root reference to JS object. The JS object will live as long as this reference exists,
+    /// and once it is collected, the JS object will also be released for collection by the JS runtime.
+    /// </summary>
     [JsonConverter(typeof(CachedEntityRefConverter))]
     public sealed class CachedEntityRef : IEquatable<CachedEntityRef>
     {
@@ -14,6 +18,7 @@ namespace EventHorizon.Blazor.Interop
             _guid = guid;
         }
 
+        /// <inheritdoc />
         ~CachedEntityRef()
         {
             EventHorizonBlazorInterop.RemoveEntity(_guid);

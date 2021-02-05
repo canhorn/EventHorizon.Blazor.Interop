@@ -24,7 +24,6 @@
     public string TestStatus = "Pending";
 
     private int result;
-    private int expected;
 
     private async Task HandleRunTest()
     {
@@ -74,7 +73,7 @@
 
     public void ValidateTest()
     {
-        if (result == expected)
+        if (result == 0)
         {
             TestStatus = "Passed";
         }
