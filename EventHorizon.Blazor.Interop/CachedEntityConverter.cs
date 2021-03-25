@@ -38,7 +38,7 @@ namespace EventHorizon.Blazor.Interop
                     switch (propertyName)
                     {
                         case "___guid":
-                            entity.___guid = reader.GetString();
+                            entity.___guid = new CachedEntityRef(reader.GetString());
                             break;
                     }
                 }

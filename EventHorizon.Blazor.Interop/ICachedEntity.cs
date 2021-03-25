@@ -8,6 +8,6 @@
         /// <summary>
         /// The Client identifier for this specific entity.
         /// </summary>
-        string ___guid { get; set; }
+        CachedEntityRef ___guid { get; set; }
     }
 }
