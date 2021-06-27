@@ -47,7 +47,7 @@
         return { [cacheKey]: newCacheKey };
     };
     /**
-     * Check argument for existing in argumentCache and if actionCallbackType.
+     * Check argument for existing in argumentCache and if actionResultCallbackType and if actionCallbackType.
      * Returns argValue if not part argumentCache or actionCallbackType.
      * 
      * @param {any} argValue
@@ -58,11 +58,17 @@
         }
         if (argValue[cacheKey] && argumentCache.has(argValue[cacheKey])) {
             return argumentCache.get(argValue[cacheKey]);
+        } else if (argValue[typeKey] && argValue[typeKey] === actionResultCallbackType) {
+            const invokableReference = argValue["invokableReference"];
+            const method = argValue["method"];
+            return function () {
+                return invokableReference.invokeMethod(method, ...convertCallbackArguments(arguments));
+            };
         } else if (argValue[typeKey] && argValue[typeKey] === actionCallbackType) {
             const invokableReference = argValue["invokableReference"];
             const method = argValue["method"];
             return async function () {
-                await invokableReference.invokeMethodAsync(method, ...convertCallbackArguments(arguments));
+                return await invokableReference.invokeMethodAsync(method, ...convertCallbackArguments(arguments));
             };
         }
         return argValue;
@@ -145,6 +151,7 @@
     const cacheKey = "___guid";
     const typeKey = "___type";
     const actionCallbackType = "action_callback";
+    const actionResultCallbackType = "action_result_callback";
     window["blazorInterop"] = {
         /**
          * This will call a function on a cached object.
@@ -424,10 +431,13 @@
                 if (typeof (newObject) === "object"
                     && !Array.isArray(newObject)
                 ) {
-                    const newCacheKey = guid();
-                    newObject[cacheKey] = newCacheKey;
-                    argumentCache.set(newCacheKey, newObject);
-                    return newCacheKey;
+                    if (!argumentCache.has(newObject[cacheKey])) {
+                        // Add to cache
+                        const newCacheKey = guid();
+                        newObject[cacheKey] = newCacheKey;
+                        argumentCache.set(newCacheKey, value);
+                    }
+                    return newObject[cacheKey];
                 }
             } catch (ex) {
                 console.log("error", ex);
@@ -557,10 +567,13 @@
                 if (typeof (newObject) === "object"
                     && !Array.isArray(newObject)
                 ) {
-                    const newCacheKey = guid();
-                    newObject[cacheKey] = newCacheKey;
-                    argumentCache.set(newCacheKey, newObject);
-                    return newCacheKey;
+                    if (!argumentCache.has(newObject[cacheKey])) {
+                        // Add to cache
+                        const newCacheKey = guid();
+                        newObject[cacheKey] = newCacheKey;
+                        argumentCache.set(newCacheKey, value);
+                    }
+                    return newObject[cacheKey];
                 }
             } catch (ex) {
                 console.log("error", ex);
