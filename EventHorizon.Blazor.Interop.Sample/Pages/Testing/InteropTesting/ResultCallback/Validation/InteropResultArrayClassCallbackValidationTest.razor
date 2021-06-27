@@ -1,0 +1,71 @@
+﻿<div>
+    <h3>Array Class Result Callback Validation</h3>
+    <div class="--lighter">Interop FuncArrayClass</div>
+    <div>
+        Status:
+        @if (TestStatus == "Passed")
+        {
+            <span class="green-badge">@TestStatus</span>
+        }
+        else if (TestStatus == "Failed")
+        {
+            <span class="red-badge">@TestStatus</span>
+        }
+        else
+        {
+            <span>@TestStatus</span>
+        }
+    </div>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">(function () {
+        const callbackActions = [];
+        window["InteropResultArrayClassCallbackValidationTest"] = {
+            trigger: (returnResult, predicate) => {
+                return predicate(returnResult);
+            }
+        };
+    })();</script>
+
+@code {
+    public string TestStatus = "Pending";
+
+    private string testId => "InteropResultArrayClassCallbackValidationTest";
+    private bool initialized = false;
+
+    private void HandleRunTest()
+    {
+        TestStatus = "Running...";
+        if (!initialized)
+        {
+            var expectedArg = "testing-returned-result";
+            var actionHandler = new ActionResultCallback<string, TestClass[]>((arg1) =>
+            {
+                if (arg1 == expectedArg)
+                {
+                    return new[] {
+                        new TestClass { Found = true, Arg1 = arg1 },
+                        new TestClass { Found = true, Arg1 = arg1 },
+                    };
+                }
+                return new TestClass[0];
+            });
+
+
+            var result = EventHorizonBlazorInterop.FuncArrayClass<TestClass>(
+                entity => new TestClass {  ___guid = entity.___guid },
+                new string[] { testId, "trigger" },
+                expectedArg,
+                actionHandler
+            );
+            initialized = true;
+            TestStatus = "Failed";
+            if (result[0].Found
+                && result[0].Arg1 == expectedArg)
+            {
+                TestStatus = "Passed";
+            }
+        }
+    }
+}

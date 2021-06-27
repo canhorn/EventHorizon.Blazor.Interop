@@ -1,0 +1,67 @@
+﻿<div>
+    <h3>Array Result Callback Validation</h3>
+    <div class="--lighter">Interop FuncArray</div>
+    <div>
+        Status:
+        @if (TestStatus == "Passed")
+        {
+            <span class="green-badge">@TestStatus</span>
+        }
+        else if (TestStatus == "Failed")
+        {
+            <span class="red-badge">@TestStatus</span>
+        }
+        else
+        {
+            <span>@TestStatus</span>
+        }
+    </div>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">(function () {
+        const callbackActions = [];
+        window["InteropResultArrayCallbackValidationTest"] = {
+            trigger: (returnResult, predicate) => {
+                return predicate(returnResult);
+            }
+        };
+    })();</script>
+
+@code {
+    public string TestStatus = "Pending";
+
+    private string testId => "InteropResultArrayCallbackValidationTest";
+    private bool initialized = false;
+
+    private void HandleRunTest()
+    {
+        TestStatus = "Running...";
+        if (!initialized)
+        {
+            var expectedArg = "testing-returned-result";
+            var actionHandler = new ActionResultCallback<string, string[]>((arg1) =>
+            {
+                if (arg1 == expectedArg)
+                {
+                    return new[] { "found", arg1 };
+                }
+                return new[] { "found-found", arg1 };
+            });
+
+
+            var result = EventHorizonBlazorInterop.FuncArray<string>(
+                new string[] { testId, "trigger" },
+                expectedArg,
+                actionHandler
+            );
+            initialized = true;
+            TestStatus = "Failed";
+            if (result[0] == "found"
+                && result[1] == expectedArg)
+            {
+                TestStatus = "Passed";
+            }
+        }
+    }
+}
