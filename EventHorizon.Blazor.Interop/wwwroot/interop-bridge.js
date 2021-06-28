@@ -571,7 +571,7 @@
                         // Add to cache
                         const newCacheKey = guid();
                         newObject[cacheKey] = newCacheKey;
-                        argumentCache.set(newCacheKey, value);
+                        argumentCache.set(newCacheKey, newObject);
                     }
                     return newObject[cacheKey];
                 }
