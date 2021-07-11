@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.JSInterop;
-
-namespace EventHorizon.Blazor.Interop.Callbacks
+﻿namespace EventHorizon.Blazor.Interop.Callbacks
 {
+    using System;
+    using System.Threading.Tasks;
+    using Microsoft.JSInterop;
+
     /// <summary>
     /// A platform provided abstraction to help with creation of a action that will trigger when called from the Client side.
     /// </summary>
