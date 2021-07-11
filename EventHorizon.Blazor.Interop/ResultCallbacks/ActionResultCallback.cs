@@ -1,12 +1,13 @@
-﻿using Microsoft.JSInterop;
-using System;
-
-namespace EventHorizon.Blazor.Interop.ResultCallbacks
+﻿namespace EventHorizon.Blazor.Interop.ResultCallbacks
 {
+    using System;
+    using Microsoft.JSInterop;
+
     /// <summary>
     /// A platform provided abstraction to help with creation of a action that will trigger when called from the Client side.
     /// Includes Result when Called
     /// </summary>
+    /// <typeparam name="TResult"></typeparam>
     public class ActionResultCallback<TResult>
     {
         /// <summary>
@@ -22,7 +23,7 @@ namespace EventHorizon.Blazor.Interop.ResultCallbacks
         /// </summary>
         public string method => "HandleCallback";
 
-        private Func<TResult> _callback;
+        private readonly Func<TResult> _callback;
 
         /// <summary>
         /// Create a new Action callback representation that will be triggered when the Client calls the method.

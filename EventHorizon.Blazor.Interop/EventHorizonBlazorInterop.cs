@@ -1,7 +1,6 @@
 ﻿namespace EventHorizon.Blazor.Interop
 {
     using System;
-    using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using Microsoft.JSInterop;
     using Microsoft.JSInterop.WebAssembly;
@@ -118,7 +117,7 @@
                 "blazorInterop.funcClass",
                 args
             );
-            return classBuilder(new CachedEntity { ___guid = new CachedEntityRef(cacheKey) });
+            return classBuilder(new CachedEntity { ___guid = cacheKey });
         }
 
         /// <summary>
@@ -192,7 +191,7 @@
             var index = 0;
             foreach (var result in results)
             {
-                array[index] = classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
+                array[index] = classBuilder(new CachedEntity { ___guid = result });
                 index++;
             }
 
@@ -287,7 +286,7 @@
                 )
             );
 
-            return classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
+            return classBuilder(new CachedEntity { ___guid = result });
         }
 
         /// <summary>
@@ -331,7 +330,7 @@
             var index = 0;
             foreach (var result in results)
             {
-                array[index] = classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
+                array[index] = classBuilder(new CachedEntity { ___guid = result });
                 index++;
             }
 
@@ -409,10 +408,10 @@
             params object[] args
         )
         {
-            var cacheRef = new CachedEntityRef(RUNTIME.Invoke<string>(
+            var cacheRef = RUNTIME.Invoke<string>(
                 "blazorInterop.new",
                 args
-            ));
+            );
             return new CachedEntity { ___guid = cacheRef };
         }
 
@@ -536,12 +535,10 @@
             string prop
         )
         {
-            var cacheRef = new CachedEntityRef(
-                RUNTIME.Invoke<string>(
-                    "blazorInterop.cacheEntity",
-                    identifier,
-                    prop
-                )
+            var cacheRef = RUNTIME.Invoke<string>(
+                "blazorInterop.cacheEntity",
+                identifier,
+                prop
             );
 
             return new CachedEntity { ___guid = cacheRef };
@@ -619,7 +616,7 @@
                 "blazorInterop.taskClass",
                 args
             );
-            return classBuilder(new CachedEntity { ___guid = new CachedEntityRef(cacheKey) });
+            return classBuilder(new CachedEntity { ___guid = cacheKey });
         }
 
         /// <summary>
@@ -697,7 +694,7 @@
             var index = 0;
             foreach (var result in results)
             {
-                array[index] = classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
+                array[index] = classBuilder(new CachedEntity { ___guid = result });
                 index++;
             }
 

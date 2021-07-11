@@ -1,8 +1,8 @@
-﻿using Microsoft.JSInterop;
-using System;
-
-namespace EventHorizon.Blazor.Interop.ResultCallbacks
+﻿namespace EventHorizon.Blazor.Interop.ResultCallbacks
 {
+    using System;
+    using Microsoft.JSInterop;
+
     /// <summary>
     /// A platform provided abstraction to help with creation of a action that will trigger when called from the Client side.
     /// </summary>

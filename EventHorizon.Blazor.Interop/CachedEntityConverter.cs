@@ -1,9 +1,9 @@
-﻿using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-
-namespace EventHorizon.Blazor.Interop
+﻿namespace EventHorizon.Blazor.Interop
 {
+    using System;
+    using System.Text.Json;
+    using System.Text.Json.Serialization;
+
     /// <summary>
     /// This helps with the payload of passing a CacheEntity between the C# and client.
     /// </summary>
@@ -38,7 +38,7 @@ namespace EventHorizon.Blazor.Interop
                     switch (propertyName)
                     {
                         case "___guid":
-                            entity.___guid = new CachedEntityRef(reader.GetString());
+                            entity.___guid = reader.GetString();
                             break;
                     }
                 }
