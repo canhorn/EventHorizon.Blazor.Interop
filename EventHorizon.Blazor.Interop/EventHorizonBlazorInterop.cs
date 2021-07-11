@@ -118,7 +118,7 @@
                 "blazorInterop.funcClass",
                 args
             );
-            return classBuilder(new CachedEntity { ___guid = cacheKey });
+            return classBuilder(new CachedEntity { ___guid = new CachedEntityRef(cacheKey) });
         }
 
         /// <summary>
@@ -192,7 +192,7 @@
             var index = 0;
             foreach (var result in results)
             {
-                array[index] = classBuilder(new CachedEntity { ___guid = result });
+                array[index] = classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
                 index++;
             }
 
@@ -287,7 +287,7 @@
                 )
             );
 
-            return classBuilder(new CachedEntity { ___guid = result });
+            return classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
         }
 
         /// <summary>
@@ -331,7 +331,7 @@
             var index = 0;
             foreach (var result in results)
             {
-                array[index] = classBuilder(new CachedEntity { ___guid = result });
+                array[index] = classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
                 index++;
             }
 
@@ -409,10 +409,11 @@
             params object[] args
         )
         {
-            return RUNTIME.Invoke<CachedEntity>(
+            var cacheRef = new CachedEntityRef(RUNTIME.Invoke<string>(
                 "blazorInterop.new",
                 args
-            );
+            ));
+            return new CachedEntity { ___guid = cacheRef };
         }
 
         /// <summary>
@@ -530,16 +531,20 @@
         /// <param name="identifier">The <see cref="ICachedEntity.___guid"/> on the client.</param>
         /// <param name="prop">The property on the root the value should be from.</param>
         /// <returns>The cache identifier of the prop value.</returns>
-        public static ICachedEntity cacheEntity(
+        public static ICachedEntity CacheEntity(
             string identifier,
             string prop
         )
         {
-            return RUNTIME.Invoke<CachedEntity>(
-                "blazorInterop.cacheEntity",
-                identifier,
-                prop
+            var cacheRef = new CachedEntityRef(
+                RUNTIME.Invoke<string>(
+                    "blazorInterop.cacheEntity",
+                    identifier,
+                    prop
+                )
             );
+
+            return new CachedEntity { ___guid = cacheRef };
         }
 
 
@@ -614,7 +619,7 @@
                 "blazorInterop.taskClass",
                 args
             );
-            return classBuilder(new CachedEntity { ___guid = cacheKey });
+            return classBuilder(new CachedEntity { ___guid = new CachedEntityRef(cacheKey) });
         }
 
         /// <summary>
@@ -692,11 +697,22 @@
             var index = 0;
             foreach (var result in results)
             {
-                array[index] = classBuilder(new CachedEntity { ___guid = result });
+                array[index] = classBuilder(new CachedEntity { ___guid = new CachedEntityRef(result) });
                 index++;
             }
 
             return array;
+        }
+
+        /// <summary>
+        /// Removes an entity from the cache, allowing the JS runtime to garbage collect it.
+        /// This method is called automatically by any objects derived from <see cref="CachedEntity"/>
+        /// upon finalization.
+        /// </summary>
+        /// <param name="identifier">Identifier is a <see cref="ICachedEntity.___guid"/></param>
+        public static void RemoveEntity(string identifier)
+        {
+            RUNTIME.InvokeVoid("blazorInterop.removeEntity", identifier);
         }
     }
 
