@@ -53,8 +53,8 @@
      * @param {any} argValue
      */
     const convertArg = (argValue) => {
-        if (!argValue) {
-            return null;
+        if (argValue == null || argValue == undefined) {
+            return undefined;
         }
         if (argValue[cacheKey] && argumentCache.has(argValue[cacheKey])) {
             return argumentCache.get(argValue[cacheKey]);
