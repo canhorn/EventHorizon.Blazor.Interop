@@ -180,7 +180,7 @@
                 }
                 return BINDING.js_to_mono_obj(value);
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, args });
             }
         },
         /**
@@ -213,7 +213,7 @@
 
                 return BINDING.js_to_mono_obj(value[cacheKey]);
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, args });
             }
         },
         /**
@@ -247,7 +247,7 @@
 
                 return BINDING.js_to_mono_obj(result);
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, args });
                 return BINDING.js_to_mono_obj([]);
             }
         },
@@ -280,7 +280,7 @@
 
                 return result;
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, root, identifier });
             }
         },
         /**
@@ -300,7 +300,7 @@
                 }
                 return values;
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, root, identifier });
             }
         },
         /**
@@ -321,13 +321,13 @@
                     obj = obj[identifier[i]];
                 }
 
-                if (argumentCache.has(value[cacheKey])) {
+                if (!!value && argumentCache.has(value[cacheKey])) {
                     value = argumentCache.get(value[cacheKey]);
                 }
 
                 obj[identifier[identifier.length - 1]] = value;
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, root, identifier, value });
             }
         },
         /**
@@ -357,7 +357,7 @@
                     }
                 }
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
                 throw { message: "invalid_call", code: "invalid_call" };
             }
         },
@@ -379,7 +379,7 @@
                 argumentCache.set(newObject[cacheKey], newObject);
                 return newObject[cacheKey];
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             throw { code: "invalid_call" };
         },
@@ -403,7 +403,7 @@
                 }
                 return createNew.call(context, ...args);
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return undefined;
         },
@@ -438,7 +438,7 @@
                     return newObject[cacheKey];
                 }
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return undefined;
         },
@@ -465,7 +465,7 @@
                     return result;
                 }
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return [];
         },
@@ -505,7 +505,7 @@
 
                 return results;
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return [];
         },
@@ -534,7 +534,7 @@
                 }
                 return await obj.call(context, ...args);
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return undefined;
         },
@@ -574,7 +574,7 @@
                     return newObject[cacheKey];
                 }
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return undefined;
         },
@@ -606,7 +606,7 @@
                     return result;
                 }
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return [];
         },
@@ -648,7 +648,7 @@
 
                 return results;
             } catch (ex) {
-                console.log("error", ex);
+                console.log("error", { ex, arguments });
             }
             return [];
         },
