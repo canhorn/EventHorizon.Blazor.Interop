@@ -82,23 +82,46 @@
         const args = [];
         for (var i = 1; i < argumentArray.length; i++) {
             const arg = convertArg(argumentArray[i]);
-
-            if (arg && typeof (arg) === "object" && !arg[cacheKey] && !Array.isArray(arg)) {
-                // Object literal: { prop: "hi", prop2: { ___type: "action_callback" } }
-                const newArg = {};
-                for (const key in arg) {
-                    if (Object.prototype.hasOwnProperty.call(arg, key)) {
-                        const element = arg[key];
-                        newArg[key] = convertArg(element);
-                    }
-                }
-                args.push(newArg);
-            } else {
-                args.push(arg);
-            }
+            constructArgument(args, arg);
         }
         return args;
     };
+
+    /**
+     * Convert argument to cached entity, introspects and converts children as well.
+     * 
+     * @param {any} args
+     * @param {any} arg
+     */
+    const constructArgument = (args, arg) => {
+        if (arg && typeof (arg) === "object" && !arg[cacheKey] && !Array.isArray(arg)) {
+            // Object literal: { prop: "hi", prop2: { ___type: "action_callback" } }
+            const newArg = {};
+            for (const key in arg) {
+                if (Object.prototype.hasOwnProperty.call(arg, key)) {
+                    const element = arg[key];
+                    if (Array.isArray(element)) {
+                        var arrayArgs = [];
+                        constructArgument(arrayArgs, element);
+                        newArg[key] = arrayArgs[0];
+                    } else {
+                        newArg[key] = convertArg(element);
+                    }
+                }
+            }
+            args.push(newArg);
+        } else if (arg && typeof (arg) === "object" && Array.isArray(arg)) {
+            // Array: [ { ___type: "action_callback" } ]
+            const newArg = [];
+            for (const item of arg) {
+                newArg.push(convertArg(item));
+            }
+            args.push(newArg);
+        } else {
+            args.push(arg);
+        }
+    };
+
     /**
      * Create a serialization safe set of arguments.
      * Taking into account arrays and objects
