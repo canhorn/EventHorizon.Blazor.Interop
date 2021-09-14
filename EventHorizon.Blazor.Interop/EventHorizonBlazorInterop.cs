@@ -1,6 +1,7 @@
 ﻿namespace EventHorizon.Blazor.Interop
 {
     using System;
+    using System.Globalization;
     using System.Threading.Tasks;
     using Microsoft.JSInterop;
     using Microsoft.JSInterop.WebAssembly;
@@ -209,9 +210,9 @@
         /// <example>
         /// <code>
         /// <![CDATA[
-        /// EventHorizonBlazorInterop.Get<Vector3>(
-        ///     entity => new Vector3(entity),
-        ///     "document.createElement"
+        /// EventHorizonBlazorInterop.Get<decimal>(
+        ///     "document",
+        ///     "nodeType"
         /// );
         /// ]]>
         /// </code>
@@ -240,7 +241,8 @@
             }
             return (T)Convert.ChangeType(
                 result,
-                Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T)
+                Nullable.GetUnderlyingType(typeof(T)) ?? typeof(T),
+                CultureInfo.InvariantCulture
             );
         }
 
