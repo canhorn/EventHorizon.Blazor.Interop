@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
-        <TargetFramework>net5.0</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
 
         <AssemblyTitle>EventHorizon Blazor Interop</AssemblyTitle>
@@ -17,8 +17,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.Components" Version="5.0.0" />
-        <PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="5.0.0" />
+        <PackageReference Include="Microsoft.AspNetCore.Components" Version="6.0.0" />
+        <PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="6.0.0" />
     </ItemGroup>
 
 </Project>
