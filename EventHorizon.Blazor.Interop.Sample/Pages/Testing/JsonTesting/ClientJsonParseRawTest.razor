@@ -17,20 +17,21 @@
     {
         var s1 = Stopwatch.StartNew();
         // Version 1: describe version 1 here.
+        var runtime = ((Microsoft.JSInterop.IJSInProcessRuntime)JSRuntime);
         for (int i = 0; i < _max; i++)
         {
-            StandardTest();
+            StandardTest(runtime);
         }
         s1.Stop();
         TimeTaken = s1.Elapsed;
         Console.WriteLine(((double)(s1.ElapsedMilliseconds * 1000000) / _max).ToString("0.00 ns"));
     }
 
-    public void StandardTest()
+    public void StandardTest(IJSInProcessRuntime runtime)
     {
-        ((IJSUnmarshalledRuntime)JSRuntime).InvokeUnmarshalled<ValueTuple<string>, string>(
-            "bridge.jsonParseRaw",
-            ValueTuple.Create(@"{ ""Type"": ""event_to_run"" }")
+        runtime.Invoke<string>(
+                "bridge.jsonParseRaw",
+            @"{ ""Type"": ""event_to_run"" }"
         );
     }
 

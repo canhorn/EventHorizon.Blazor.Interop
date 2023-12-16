@@ -64,6 +64,8 @@
                 actualClass2 = arg3;
                 actualString2 = arg4;
                 actualClass3 = arg5;
+                
+                ValidateTest();
                 return Task.CompletedTask;
             });
 
@@ -75,7 +77,6 @@
         }
 
         RunTest();
-        ValidateTest();
     }
 
     public void RunTest()
@@ -101,5 +102,7 @@
         {
             TestStatus = "Failed";
         }
+
+        StateHasChanged();
     }
 }

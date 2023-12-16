@@ -2,9 +2,9 @@
 @using EventHorizon.Blazor.Interop;
 
 <div>
-    <h3>Interop Get Test</h3>
-    <div class="--lighter">Interop Get</div>
-    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <h3>Interop Set Float Test</h3>
+    <div class="--lighter">Interop Set</div>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
     <button class="run-btn" @onclick="HandleRunTest">Run</button>
 </div>
 
@@ -26,9 +26,10 @@
 
     public void RunTest()
     {
-        var locationHref = EventHorizonBlazorInterop.Get<string>(
-            "document",
-            "location.href"
+        EventHorizonBlazorInterop.Set(
+            "setPrimitive",
+            "setNumber",
+            99.99f
         );
     }
 }
