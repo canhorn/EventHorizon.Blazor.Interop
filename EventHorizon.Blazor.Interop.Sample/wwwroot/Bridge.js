@@ -4,12 +4,12 @@
     },
     jsonParse: (json) => {
         const obj = JSON.parse(json);
-        console.log({ obj })
+        console.log({ obj });
     },
     jsonParseRaw: (args) => {
-        var json = Blazor.platform.readStringField(args);
+        var json = args;
         const obj = JSON.parse(json);
-        console.log({ obj })
+        console.log({ obj });
     }
 };
 
@@ -62,6 +62,12 @@ window["LiteralCallback"] = {
 window["getPrimitive"] = {
     result: 999,
     numberResult: 999.99,
+};
+window["setPrimitive"] = {
+    setInt: 999,
+    setString: "string",
+    setBool: true,
+    setNumber: 999.99,
 };
 
 window["getArray"] = {

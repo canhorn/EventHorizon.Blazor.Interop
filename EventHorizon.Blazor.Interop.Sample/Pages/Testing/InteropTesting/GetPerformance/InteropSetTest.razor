@@ -2,8 +2,8 @@
 @using EventHorizon.Blazor.Interop;
 
 <div>
-    <h3>Interop Get Test</h3>
-    <div class="--lighter">Interop Get</div>
+    <h3>Interop Set Test</h3>
+    <div class="--lighter">Interop Set</div>
     <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
     <button class="run-btn" @onclick="HandleRunTest">Run</button>
 </div>
@@ -26,9 +26,10 @@
 
     public void RunTest()
     {
-        var locationHref = EventHorizonBlazorInterop.Get<string>(
-            "document",
-            "location.href"
+        EventHorizonBlazorInterop.Set(
+            "setPrimitive",
+            "setString",
+            "location"
         );
     }
 }

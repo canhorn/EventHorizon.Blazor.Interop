@@ -58,24 +58,25 @@
                 actualClass1 = arg1[0];
                 actualClass2 = arg1[1];
                 actualClass3 = arg1[2];
+
+                ValidateTest();
                 return Task.CompletedTask;
             });
 
             EventHorizonBlazorInterop.Func<string>(
-                new string[] { testId, "register" },
-                actionHandler
+            new string[] { testId, "register" },
+            actionHandler
             );
             initialized = true;
         }
 
         RunTest();
-        ValidateTest();
     }
 
     public void RunTest()
     {
         EventHorizonBlazorInterop.Func<CachedEntity>(
-            new object[] { new string[] { testId, "trigger" } }
+        new object[] { new string[] { testId, "trigger" } }
         );
     }
 
@@ -83,8 +84,8 @@
     {
         var value = actualClass1.Id;
         if (actualClass1.Id == expectedClass1
-            && actualClass2.Id == expectedClass2
-            && actualClass3.Id == expectedClass3
+        && actualClass2.Id == expectedClass2
+        && actualClass3.Id == expectedClass3
         )
         {
             TestStatus = "Passed";
@@ -93,5 +94,7 @@
         {
             TestStatus = "Failed";
         }
+
+        StateHasChanged();
     }
 }

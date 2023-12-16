@@ -13,20 +13,28 @@ jobs:
     runs-on: ubuntu-latest
     name: Build/Deploy .NET Core
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4
+
     - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '6.0.x'
+        dotnet-version: '8.0.x'
+
+    - name: Install .NET Workloads
+      run: dotnet workload install wasm-tools
+
     - name: Install dependencies
       run: dotnet restore
+
     - name: Build
       run: dotnet build --configuration Release --no-restore
+
     - name: .NET Publish
       run: dotnet publish --configuration Release -o published ./EventHorizon.Blazor.Interop.Sample 
+
     - name: Publish Static Site
       id: builddeploy
-      uses: Azure/static-web-apps-deploy@v0.0.1-preview
+      uses: Azure/static-web-apps-deploy@v1
       with:
         azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_POLITE_PLANT_0F8750A10 }}
         repo_token: ${{ secrets.GITHUB_TOKEN }} # Used for Github integrations (i.e. PR comments)
@@ -44,7 +52,8 @@ jobs:
     steps:
     - name: Close Pull Request
       id: closepullrequest
-      uses: Azure/static-web-apps-deploy@v0.0.1-preview
+      uses: Azure/static-web-apps-deploy@v1
       with:
         azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_POLITE_PLANT_0F8750A10 }}
         action: 'close'
+        app_location: "published/wwwroot" # App source code path

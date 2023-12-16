@@ -2,9 +2,9 @@
 @using EventHorizon.Blazor.Interop;
 
 <div>
-    <h3>Interop Get Test</h3>
-    <div class="--lighter">Interop Get</div>
-    <ReportTimeTaken TimeTaken="TimeTaken" Runs="_max" />
+    <h3>Interop Set Decimal Test</h3>
+    <div class="--lighter">Interop Set</div>
+    <ReportTimeTaken Runs="_max" TimeTaken="TimeTaken" />
     <button class="run-btn" @onclick="HandleRunTest">Run</button>
 </div>
 
@@ -17,6 +17,7 @@
         var s1 = Stopwatch.StartNew();
         for (int i = 0; i < _max; i++)
         {
+
             RunTest();
         }
         s1.Stop();
@@ -26,9 +27,10 @@
 
     public void RunTest()
     {
-        var locationHref = EventHorizonBlazorInterop.Get<string>(
-            "document",
-            "location.href"
+        EventHorizonBlazorInterop.Set(
+            "setPrimitive",
+            "setNumber",
+            999.99m
         );
     }
 }

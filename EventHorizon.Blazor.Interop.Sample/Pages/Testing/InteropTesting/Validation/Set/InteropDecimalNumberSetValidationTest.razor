@@ -1,0 +1,51 @@
+﻿<div>
+    <h3>Interop Decimal Number Set Validation</h3>
+    <div class="--lighter">Interop Set</div>
+    <div>
+        Status:
+        @if (TestStatus == "Passed")
+        {
+            <span class="green-badge">@TestStatus</span>
+        }
+        else if (TestStatus == "Failed")
+        {
+            <span class="red-badge">@TestStatus</span>
+        }
+        else
+        {
+            <span>@TestStatus</span>
+        }
+    </div>
+    <button class="run-btn" @onclick="HandleRunTest">Run</button>
+</div>
+
+<script suppress-error="BL9992">
+    (function () {
+        window["InteropDecimalNumberSetValidationTest"] = {
+            value: 0.0000000000000001224646852585,
+        };
+    })();
+</script>
+
+@code {
+    public string TestStatus = "Pending";
+
+    private string testId = "InteropDecimalNumberSetValidationTest";
+    private decimal value = 0.0000000000000001224646852585m;
+
+    private void HandleRunTest()
+    {
+        TestStatus = "Pending";
+        RunTest();
+        TestStatus = "Passed";
+    }
+
+    public void RunTest()
+    {
+        EventHorizonBlazorInterop.Set(
+            testId,
+            "value",
+            value
+        );
+    }
+}
