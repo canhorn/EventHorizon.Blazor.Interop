@@ -26,7 +26,7 @@ jobs:
         echo "NuGetVersionV2: ${{ steps.gitversion.outputs.NuGetVersionV2 }}"
     
     - name: Bump version and push tag
-      uses: anothrNick/github-tag-action@1.17.2
+      uses: anothrNick/github-tag-action@1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         # We want to push to nuget the same version we tag
